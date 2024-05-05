@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/style.css" />
+
+    <title>Consultar Entregas</title>
+  </head>
+  <body>
+    <div id="menu-options">
+      <ul>
+        <a href="/index.html"><li>Registrar Entrega</li></a>
+        <a href="/pages/editar.html"><li>Editar Entrega</li></a>
+        <a href="/pages/apagar.html"><li>Apagar Entrega</li></a>
+        <a href="/pages/detalhes.html"><li>Listagem Detalhada</li></a>
+      </ul>
+    </div>
+    <header>
+      <img id="menu-icon" src="/img/barra-de-menu.png" alt="" />
+      <img id="cha" src="/img/marijuana.png" alt="" />
+      <img id="po" src="/img/cocaina.png" alt="" />
+      <img id="bala" src="/img/mdma.png" alt="" />
+      <img id="lsd" src="/img/lsd.png" alt="" />
+      <img id="ghb" src="/img/ghb.png" alt="" />
+    </header>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Dados salvos com sucesso!</p>
+      </div>
+    </div>
+
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div class="column">
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+        <input
+          type="text"
+          id="endereço-entrega"
+          placeholder="Digite O Endereço"
+        />
+        <input
+          type="text"
+          id="descricao-produto"
+          placeholder="Tipo e quantidade do Material"
+        />
+        <input
+          id="forma-pagamento"
+          type="text"
+          placeholder="Informe o Método De Pagamento"
+        />
+        <input
+          id="data-entrega"
+          type="text"
+          placeholder="Data Da Entrega (DDMMYY)"
+        />
+        <div id="btns">
+          <button id="consulta-btn">Consultar</button>
+          <button id="gerar-relatorio-btn">Relatório</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("consulta-btn")
+        .addEventListener("click", function () {
+          const nomeMotoca = document.getElementById("nome-motoca").value;
+
+          fetch("http://192.168.10.20:8001/dados")
+            .then((response) => response.json())
+            .then((data) => {
+              const dataList = document.getElementById("data-list");
+              dataList.innerHTML = "";
+              data.forEach((item) => {
+                if (item.nomeMotoca === nomeMotoca) {
+                  const listItem = document.createElement("li");
+                  listItem.innerHTML = `
+              <span class="name">Número Do Registro: </span>
+              <span class="item" id="id" style="color:rgb(179, 7, 7);">${item.id}</span><br>
+              <span class="name">Nome Do Motoca: </span>
+              <span class="item" id="nome-motoca" style="color:rgb(56, 56, 56);">${item.nomeMotoca}</span><br>
+              <span class="name">Endereço Da Entrega: </span>
+              <span class="item">${item.enderecoEntrega}</span><br>
+              <span class="name">Descrição do Produto: </span>
+              <span class="item">${item.descricaoProduto}</span><br>
+              <span class="name">Forma De Pagamento: </span>
+              <span class="item">${item.formaPagamento}</span><br>
+              <span class="name">Data Da Entrega: </span>
+              <span class="item">${item.dataEntrega}</span><br>
+            `;
+                  dataList.appendChild(listItem);
+                }
+              });
+            })
+            .catch((error) => console.error("Erro ao buscar dados:", error));
+        });
+
+      document
+        .getElementById("gerar-relatorio-btn")
+        .addEventListener("click", function () {
+          const nomeMotoca = document.getElementById("nome-motoca").value;
+          // Restante do código para gerar o relatório...
+        });
+    </script>
+  </body>
+</html>

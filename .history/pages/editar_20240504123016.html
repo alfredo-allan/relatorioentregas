@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <title>Registro De Entregas</title>
+  </head>
+  <body>
+		<div id="menu-options">
+        <ul>
+          <a href="/index.html"><li>Registra Entrega</li></a>
+          <a href="../pages/consultar.html"><li>Consultar Entregas</li></a>
+          <a href="../pages/apagar.html"><li>Apagar Entrega</li></a>
+
+           </ul>
+      </div>
+    </div>
+    <header>
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+        <img id="cha" src="../img/marijuana.png" alt="" />
+        <img id="po" src="../img/cocaina.png" alt="" />
+        <img id="bala" src="../img/mdma.png" alt="" />
+        <img id="lsd" src="../img/lsd.png" alt="" />
+        <img id="ghb" src="../img/ghb.png" alt="" />
+    </header>
+        <div id="myModal" class="modal">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Dados salvos com sucesso!</p>
+      </div>
+    </div>
+
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div class="column">
+        <span >Número De Registro:</span>
+        <input
+          type="text"
+          id="id"
+          placeholder="Número De Registro"
+          readonly
+        />
+        <span>Nome Do Motoca</span>
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+
+        <span>Endereço Da Entrega</span>
+        <input
+          type="text"
+          id="endereco-entrega"
+          placeholder="Digite O Endereço"
+        />
+
+        <span>Material</span>
+        <input
+          type="text"
+          id="descricao-produto"
+          placeholder="Tipo e quantidade do Material"
+        />
+
+         <span>Pagamamento</span>
+        <input id="forma-pagamento" type="text" placeholder="Informe o Metodo De Pagamento" />
+       
+        <span>Data</span>
+        <input id="data-entrega" type="text">
+
+        <button id="btn-atualizar">Atualizar</button>
+      </div>
+    </div>
+  </body>
+  <script>function formatarData() {
+  let inputData = document.getElementById("data-entrega").value;
+
+  let dataFormatada = inputData.replace(/^(\d{2})(\d{2})(\d{2})$/, "$1/$2/$3");
+
+  document.getElementById("data-entrega").value = dataFormatada;
+}
+document.getElementById("btn-atualizar").addEventListener("click", function () {
+    const id = document.getElementById("id").value;
+    const nomeMotoca = document.getElementById("nome-motoca").value;
+    const enderecoEntrega = document.getElementById("endereco-entrega").value;
+    const descricaoProduto = document.getElementById("descricao-produto").value;
+    const formaPagamento = document.getElementById("forma-pagamento").value;
+    const dataEntrega = document.getElementById("data-entrega").value;
+
+    fetch(`http://192.168.10.20:8001/atualizar-dados/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            nomeMotoca: nomeMotoca,
+            enderecoEntrega: enderecoEntrega, // Corrigir o nome do campo
+            descricaoProduto: descricaoProduto,
+            formaPagamento: formaPagamento,
+            dataEntrega: dataEntrega,
+            
+        }),
+    })
+    .then((response) => {
+        if (response.ok) {
+            document.getElementById("myModal").style.display = "block";
+        } else {
+            throw new Error("Erro ao atualizar os dados");
+        }
+    })
+    .catch((error) => {
+        console.error("Erro ao atualizar os dados:", error);
+    });
+});
+    let proximoId = 1;
+
+    function gerarProximoId() {
+      document.getElementById("id").value = proximoId;
+      proximoId++;
+    }
+    // Selecionando o botão de fechar e o modal
+    var closeButton = document.querySelector(".close");
+    var modal = document.getElementById("myModal");
+
+    // Adicionando um evento de clique no botão de fechar
+    closeButton.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+
+    // Função para obter o parâmetro 'id' da URL
+function getUrlParameter(name) {
+  name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+  var results = regex.exec(location.search);
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+// Obter o ID da URL
+var id = getUrlParameter("id");
+
+// Preencher o campo de input com o ID
+document.getElementById("id").value = id;
+// Função para obter o parâmetro 'id' da URL
+function getUrlParameter(name) {
+  name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+  var results = regex.exec(location.search);
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+// Obter o ID da URL
+var id = getUrlParameter("id");
+
+// Preencher o campo de input com o ID
+document.getElementById("id").value = id;
+
+// Fazer uma requisição para buscar os dados do registro correspondente ao ID
+fetch(`http://192.168.10.20:8001/dados/${id}`)
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("nome-motoca").value = data.nomeMotoca;
+    document.getElementById("endereco-entrega").value = data.enderecoEntrega;
+    document.getElementById("descricao-produto").value = data.descricaoProduto;
+    document.getElementById("forma-pagamento").value = data.formaPagamento;
+    document.getElementById("data-entrega").value = data.dataEntrega;
+    document.getElementById("valorAproximado").value = data.valorAproximado;
+  })
+  .catch(error => {
+    console.error("Erro ao buscar os dados do registro:", error);
+  });
+  </script>
+</script>
+	<script src="../script.js"></script>
+</html>

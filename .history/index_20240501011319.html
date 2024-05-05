@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Registro De Entregas</title>
+  </head>
+  <body>
+    <header>
+      <img src="./img/barra-de-menu.png" alt="" />
+			<img src="./img/" alt="">
+    </header>
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div class="column">
+        <span style="display: none">ID:</span>
+        <input
+          type="text"
+          id="id"
+          style="display: none"
+          placeholder="ID"
+          readonly
+        />
+        <span>Nome Do Promotor:</span>
+        <input type="text" id="nome-promotor" placeholder="Digite Seu Nome" />
+
+        <span>Nome Do Cliente</span>
+        <input
+          type="text"
+          id="nome-cliente"
+          placeholder="Nome Do Supermercado"
+        />
+
+        <span>Endereço</span>
+        <input
+          type="text"
+          id="endereco-cliente"
+          placeholder="Endereço Do Mercado"
+        />
+
+        <span>EAN</span>
+        <input type="text" id="ean" placeholder="Código De Barras" />
+
+        <span>Descrição</span>
+        <input
+          type="text"
+          id="descricao-produto"
+          placeholder="Descrição Do Produto"
+        />
+
+        <span>Data De Vencimento</span>
+        <input
+          type="text"
+          id="data-vencimento"
+          placeholder="Data De Vencimento"
+        />
+
+        <span>Quantidade De Produtos</span>
+        <input type="text" id="quantidade-produtos" placeholder="Quantidade" />
+
+        <button id="btn-salvar">Salvar</button>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Registro De Entregas</title>
+  </head>
+  <body>
+		<div id="menu-options">
+        <ul>
+          <!-- <img id="usuario" src="./images/usuario-exemplo.jpg" alt="" /> -->
+          <li>Consultar Entregas</li>
+          <li>Registrar Entregas</li>
+          <li>Editar Entrega</li>
+          <li>Apagar Entrega</li>
+					<li></li>
+           </ul>
+      </div>
+    </div>
+    <header>
+      <img id="menu-icon" src="./img/barra-de-menu.png" alt="" />
+        <img id="cha" src="./img/marijuana.png" alt="" />
+        <img id="po" src="./img/cocaina.png" alt="" />
+        <img id="bala" src="./img/mdma.png" alt="" />
+        <img src="./img/lsd.png" alt="" />
+        <img src="./img/ghb.png" alt="" />
+    </header>
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div class="column">
+        <span style="display: none">ID:</span>
+        <input
+          type="text"
+          id="id"
+          style="display: none"
+          placeholder="ID"
+          readonly
+        />
+        <span>Nome Do Motoca</span>
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+
+        <span>Endereço Da Entrega</span>
+        <input
+          type="text"
+          id="endereço-entrega"
+          placeholder="Digite O Endereço"
+        />
+
+        <span>Material</span>
+        <input
+          type="text"
+          id="produto"
+          placeholder="Tipo do Material"
+        />
+
+         <span>Pagamamento</span>
+        <input type="text" id="agamento" placeholder="Informe o Metodo De Pagamento" />
+
+        <button id="btn-salvar">Salvar</button>
+      </div>
+    </div>
+  </body>
+	<script src="./script.js"></script>
+</html>

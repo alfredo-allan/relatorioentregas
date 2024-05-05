@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <title>Registro De Entregas</title>
+  </head>
+  <body>
+		<div id="menu-options">
+        <ul>
+          <!-- <img id="usuario" src="./images/usuario-exemplo.jpg" alt="" /> -->
+           <a href="./consultar.html"><li>Consultar Entregas</li></a>
+           <a href="/index.html"><li>Registrar Entregas</li></a>
+           <a href="./editar.html"><li>Editar Entrega</li></a>
+           <a href="./apagar.html"><li>Apagar Entrega</li></a>
+					 <a href="./detalhes.html"><li>Listagem Detalhada</li></a>
+           </ul>
+      </div>
+    </div>
+    <header>
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+        <img id="cha" src="../img/marijuana.png" alt="" />
+        <img id="po" src="../img/cocaina.png" alt="" />
+        <img id="bala" src="../img/mdma.png" alt="" />
+        <img id="lsd" src="../img/lsd.png" alt="" />
+        <img id="ghb" src="../img/ghb.png" alt="" />
+    </header>
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div class="column">
+        <span style="display: none">ID:</span>
+        <input
+          type="text"
+          id="id"
+          style="display: none"
+          placeholder="ID"
+          readonly
+        />
+        <span>Nome Do Motoca</span>
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+
+        <span>Endereço Da Entrega</span>
+        <input
+          type="text"
+          id="endereco-entrega"
+          placeholder="Digite O Endereço"
+        />
+
+        <span>Material</span>
+        <input
+          type="text"
+          id="descricao-produto"
+          placeholder="Tipo do Material"
+        />
+
+         <span>Pagamamento</span>
+        <input type="text" id="pagamento" placeholder="Informe o Metodo De Pagamento" />
+
+        <div id="modal">
+        <span for="startDate">Data de início:</span>
+        <input id="startDate" type="date">
+        <span for="endDate">Data de término:</span>
+        <input id="endDate" type="date">
+       <!-- <button id="btnConsultar">Salvar</button> -->
+       </div>
+
+        <div id="bts-consulta">
+        <button id="consulta-btn">Consultar</button>
+        <button id="gerar-relatorio-btn" >Relatorio</button>
+        </div>
+      </div>
+    </div>
+  </body>
+   <script>function formatarData() {
+  let inputData = document.getElementById("data").value;
+
+  let dataFormatada = inputData.replace(/^(\d{2})(\d{2})(\d{2})$/, "$1/$2/$3");
+
+  document.getElementById("data").value = dataFormatada;
+}
+const dataInput = document.getElementById("data");
+const modal = document.getElementById("modal");
+const btnConsultar = document.getElementById("btn-consultar");
+
+dataInput.addEventListener("click", function() {
+    modal.style.display = "block";
+});
+
+btnConsultar.addEventListener("click", function() {
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+    
+    // Faça algo com as datas selecionadas, como mostrá-las no campo de input da data
+    dataInput.value = `De ${startDate} até ${endDate}`;
+    
+    modal.style.display = "none";
+});
+document
+      .getElementById("consulta-btn")
+      .addEventListener("click", function () {
+        const nomeCliente = document.getElementById("nome-motoca").value;
+        const enderecoCliente =
+          document.getElementById("endereço-entrega").value;
+        const nomePromotor = document.getElementById("nome-motoca").value;
+
+        fetch("https://v1controledatas.pythonanywhere.com/dados")
+          .then((response) => response.json())
+          .then((data) => {
+            const dataList = document.getElementById("data-list");
+            dataList.innerHTML = "";
+            data.forEach((item) => {
+              if (
+                item.enderecoEntrega === enderecoEntrega &&
+                item.nomeMotoca == nomeMotoca &&
+                item.startDate == startDate &&
+                item.endDate == endDate
+              ) {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                <br/>
+              <span class="name" >Nome do Motoca: </span> <span class="item" id="promotor" style="color:rgb(56, 56, 56);">${item.nomePromotor}</span><br>
+              <span class="name" >Número Do Registro: </span> <span class="item" id="id" style="color:rgb(179, 7, 7);">${item.id}</span><br>
+              <span class="name" >Endereço da Entrega: </span><span class="item">${item.enderecoEntrega}</span><br>
+              <span class="name" >Descrição do Produto: </span><span class="item">${item.descricaoProduto}</span><br>
+              <span class="name" >Datas Das Entregas: </span><span class="item">${item.startDate}</span><br>
+              <span class="name" >Datas Das Entregas: </span><span class="item">${item.endDate}</span><br>
+              <span class="name" >Forma De Pagamento: </span><span class="item">${item.pagamento}</span><br>
+
+
+            `;
+                dataList.appendChild(listItem);
+              }
+            });
+          })
+          .catch((error) => console.error("Erro ao buscar dados:", error));
+      });
+  </script>
+  <script>
+    document
+      .getElementById("gerar-relatorio-btn")
+      .addEventListener("click", function () {
+        const nomeCliente = document.getElementById("nome-motoca").value;
+        const enderecoCliente =
+          document.getElementById("endereco-cliente").value;
+        const nomePromotor = document.getElementById("nome-motoca").value;
+        fetch("https://v1controledatas.pythonanywhere.com/dados")
+          .then((response) => response.json())
+          .then((data) => {
+            const content = data
+              .map((item) => {
+                if (
+                  item.nomeMotoca === nomeMotoca &&
+                  item.enderecoEntrega === enderecoEntrega
+                ) {
+                  return `
+                            Nome Do Motoca: ${item.nomeMotoca}
+                            Número Do Registro: ${item.id}
+                            Endereço Da Entrega: ${item.enderecoEntrega}
+                            Descrição Do Produto: ${item.descricaoProduto}
+                            Forma De Pagamento: ${item.inputData}
+                            Dia Da Entrega: 
+                            -----------------------------
+                        `;
+                }
+              })
+              .join("");
+
+            const blob = new Blob([content], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "Relatorio_Datas.txt";
+            a.click();
+          })
+          .catch((error) => console.error("Erro ao buscar dados:", error));
+      });
+  </script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> -->
+  <script src="../js/script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.12.0/docxgen.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.12.0/docxgen.js"></script>
+</script>
+	<script src="../script.js"></script>
+</html>

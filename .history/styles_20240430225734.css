@@ -1,0 +1,39 @@
+:root {
+  --las-americas: "Las-americas", sans-serif;
+  --parisienne-font: "";
+}
+
+body {
+  background-image: url("./img/coringa.jpg");
+  background-size: 100% 100%;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+@font-face {
+  font-family: "Las-americas";
+  src: url("./fonts/las_americas/LasAmericas_PERSONAL_USE_ONLY.otf")
+    format("truetype");
+  /* Adicione mais formatos (e.g. woff, woff2) conforme necessário */
+}
+
+header {
+	top: 0;
+	left: 0;
+  position: fixed;
+  width: 49vh;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.219);
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+#text-top {
+  text-align: center;
+  font-family: var(--las-americas);
+  color: white;
+  letter-spacing: 1.2px;
+	margin-top: 80px;
+}

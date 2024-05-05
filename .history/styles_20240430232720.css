@@ -1,0 +1,80 @@
+:root {
+  --las-americas: "Las-americas", sans-serif;
+  --parisienne-font: "";
+}
+
+body {
+  background-image: url("./img/coringa.jpg");
+  background-size: 100% 100%;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+@font-face {
+  font-family: "Las-americas";
+  src: url("./fonts/las_americas/LasAmericas_PERSONAL_USE_ONLY.otf")
+    format("truetype");
+  /* Adicione mais formatos (e.g. woff, woff2) conforme necessário */
+}
+
+@font-face {
+  font-family: "Las-americas";
+  src: url("./")
+    format("truetype");
+  /* Adicione mais formatos (e.g. woff, woff2) conforme necessário */
+}
+
+header {
+  img {
+    width: 70px;
+    border-radius: 50%;
+  }
+}
+
+#text-top {
+  text-align: center;
+  font-family: var(--las-americas);
+  color: white;
+  letter-spacing: 1.2px;
+  margin-top: 80px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px 15px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+  margin: 0 auto;
+  span {
+    font-weight: 900;
+    font-family: var(--luthier-font);
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    color: var(--cor-azul);
+  }
+}
+
+#form {
+  margin-top: 80px;
+}
+
+input {
+  margin-bottom: 5px;
+  padding: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+input::placeholder {
+  text-align: center;
+  color: gray;
+  font-family: var(--oswald-font);
+  font-weight: 400;
+}
