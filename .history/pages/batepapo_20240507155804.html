@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="chatForm">
+      <input type="text" id="messageInput" />
+      <button type="submit">Send</button>
+    </form>
+    <ul id="chatMessages"></ul>
+  </body>
+  <script>
+    const chatForm = document.getElementById("chatForm");
+    const messageInput = document.getElementById("messageInput");
+    const chatMessages = document.getElementById("chatMessages");
+
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const message = messageInput.value;
+      fetch("/send_message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
+      });
+      messageInput.value = "";
+    });
+
+    setInterval(() => {
+      fetch("/get_messages")
+        .then((response) => response.json())
+        .then((data) => {
+          chatMessages.innerHTML = "";
+          data.messages.forEach((message) => {
+            const li = document.createElement("li");
+            li.textContent = message;
+            chatMessages.appendChild(li);
+          });
+        });
+    }, 1000);
+  </script>
+</html>

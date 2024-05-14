@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+    <h1>Chat App</h1>
+
+    <h2>Register/Login</h2>
+    <label for="username">Username:</label>
+    <input type="text" id="username" />
+    <button onclick="registerUser()">Register/Login</button>
+
+    <h2>Users</h2>
+    <ul id="users"></ul>
+
+    <h2>Messages</h2>
+    <ul id="messages"></ul>
+
+    <h2>Send Message</h2>
+    <label for="recipient">Recipient:</label>
+    <input type="text" id="recipient" />
+    <label for="message">Message:</label>
+    <input type="text" id="message" />
+    <button onclick="sendMessage()">Send Message</button>
+
+    <h2>Delete Message</h2>
+    <label for="messageId">Message ID:</label>
+    <input type="number" id="messageId" />
+    <button onclick="deleteMessage()">Delete Message</button>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/socket.io@4.2.1/dist/socket.io.js"
+    ></script>
+    <script>
+      function registerUser() {
+        const username = document.getElementById("username").value;
+        fetch("http://192.168.10.20:8001/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => alert(data.message))
+          .catch((error) => console.error(error));
+      }
+
+      function sendMessage() {
+        const senderUsername = document.getElementById("username").value;
+        const recipientUsername = document.getElementById("recipient").value;
+        const message = document.getElementById("message").value;
+        fetch("http://192.168.10.20:8001/send_private_message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sender_username: senderUsername,
+            recipient_username: recipientUsername,
+            message: message,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => alert(data.message))
+          .catch((error) => console.error(error));
+      }
+
+      function deleteMessage() {
+        const messageId = document.getElementById("messageId").value;
+        fetch(`http://192.168.10.20:8001/delete_message/${messageId}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => alert(data.message))
+          .catch((error) => console.error(error));
+      }
+
+      window.onload = function () {
+        const socket = io("http://192.168.10.20:8001");
+
+        socket.on("user_registered", (data) => {
+          alert(`${data.username} has registered/login`);
+        });
+
+        socket.on("new_private_message", (data) => {
+          alert(`New message from ${data.sender}: ${data.message}`);
+        });
+
+        getUsers();
+        getMessages();
+      };
+    </script>
+  </body>
+</html>

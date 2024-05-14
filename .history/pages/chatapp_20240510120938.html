@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat App</title>
+  </head>
+  <body>
+    <h1>Chat App</h1>
+
+    <h2>Register User</h2>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" />
+    <label for="isAdmin">Admin:</label>
+    <input type="checkbox" id="isAdmin" name="isAdmin" />
+    <button id="registerBtn">Register</button>
+
+    <h2>User List</h2>
+    <ul id="userList"></ul>
+
+    <h2>Chat</h2>
+    <div id="chatBox"></div>
+
+    <h3>Send Message</h3>
+    <label for="senderSelect">Select Sender:</label>
+    <select id="senderSelect"></select>
+    <label for="recipientSelect">Select Recipient:</label>
+    <select id="recipientSelect"></select>
+    <input type="text" id="message" name="message" />
+    <button id="sendBtn">Send</button>
+
+    <label for="userDisplayName">Display Name:</label>
+<input type="text" id="userDisplayName" name="userDisplayName" />
+
+
+    <script>
+      const registerBtn = document.getElementById("registerBtn");
+      const userList = document.getElementById("userList");
+      const senderSelect = document.getElementById("senderSelect");
+      const recipientSelect = document.getElementById("recipientSelect");
+      const messageInput = document.getElementById("message");
+      const sendBtn = document.getElementById("sendBtn");
+      const chatBox = document.getElementById("chatBox");
+
+      registerBtn.addEventListener("click", async () => {
+        const username = document.getElementById("username").value;
+        const isAdmin = document.getElementById("isAdmin").checked;
+
+        const data = {
+          username: username,
+          isAdmin: isAdmin,
+        };
+
+        const response = await fetch("http://192.168.10.20:8007/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        alert(result.message);
+      });
+
+      sendBtn.addEventListener("click", async () => {
+        const sender = senderSelect.value;
+        const recipient = recipientSelect.value;
+        const message = messageInput.value;
+
+        const data = {
+          sender_username: sender,
+          recipient_username: recipient,
+          message: message,
+        };
+
+        const response = await fetch(
+          "http://192.168.10.20:8007/send_private_message",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        const result = await response.json();
+        alert(result.message);
+      });
+
+      function updateRecipientList(users) {
+        recipientSelect.innerHTML = "";
+        senderSelect.innerHTML = ""; // Clear sender select options
+        users.forEach((user) => {
+          const option = document.createElement("option");
+          option.value = user.username;
+          option.innerText = user.username;
+          recipientSelect.appendChild(option);
+
+          const senderOption = document.createElement("option");
+          senderOption.value = user.username;
+          senderOption.innerText = user.username;
+          senderSelect.appendChild(senderOption);
+        });
+      }
+
+      async function getUsers() {
+        const response = await fetch("http://192.168.10.20:8007/get_users");
+        const data = await response.json();
+
+        updateRecipientList(data.users);
+      }
+
+      getUsers();
+
+      socket = io.connect("http://192.168.10.20:8007");
+
+      socket.on("new_private_message", (data) => {
+        chatBox.innerHTML += `<p><b>${data.sender}</b>: ${data.message}</p>`;
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io@4.0.1/dist/socket.io.min.js"></script>
+  </body>
+</html>

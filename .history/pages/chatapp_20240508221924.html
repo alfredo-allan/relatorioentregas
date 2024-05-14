@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register User</title>
+  </head>
+  <body>
+    <h1>Register User</h1>
+    <form id="registerForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required />
+      <br />
+      <label for="is_admin">Is Admin:</label>
+      <input type="checkbox" id="is_admin" name="is_admin" />
+      <br />
+      <button type="submit">Register</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          let username = document.getElementById("username").value;
+          let is_admin = document.getElementById("is_admin").checked;
+
+          
+    </script>
+  </body>
+</html>

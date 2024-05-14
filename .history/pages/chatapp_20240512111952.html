@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <title>ChatApp</title>
+  </head>
+  <body>
+    <header id="ChatApp">
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+      <div id="menu-options">
+        <ul>
+          <a href="/index.html"><li>Registrar Entrega</li></a>
+          <a href="/pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="/pages/consultar.html"><li>Consultar Entregas</li></a>
+          <a href="/pages/registrar.html"><li>Registar-Se</li></a>
+        </ul>
+      </div>
+      <h1 id="textchat">Chat Entregas</h1>
+      <img id="imgchat" src="../img/bater-papo.png" alt="" />
+    </header>
+    <div id="login">
+      <span>Nome</span> <br />
+      <input id="nomeusuario" type="text" placeholder="Digite Seu Nome" />
+    </div>
+    <div id="message">
+      <span>Mensagem Recebida</span> <br />
+      <div id="msgRecebida">
+        <textarea id="msgInput" rows="4" disabled></textarea>
+        <!-- Alterado para <textarea> -->
+      </div>
+      <span>Lista De Usuarios</span>
+      <ul></ul>
+      <div id="usuarios"></div>
+      <br />
+      <input id="lstUsu" type="text" />
+      <button  style="letter-spacing: 3px;" id="ctsUsu">Selecionar</button>
+
+      <div id="msgEnviar">
+        <span>Enviar Mensagem</span> <br />
+        <textarea
+          placeholder="Enviar Menssagem Para Quem ?"
+          id="enviarMsg"
+          type="text"
+        ></textarea>
+        <button id="enviarmsg">Enviar</button>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const nomeUsuarioInput = document.getElementById("nomeusuario");
+      const msgRecebidaDiv = document.getElementById("msgRecebida");
+      const usuariosUl = document.querySelector("#usuarios ul");
+      const enviarMsgTextarea = document.getElementById("enviarMsg");
+
+      // Função para verificar se o nome de usuário existe
+      nomeUsuarioInput.addEventListener("change", function () {
+        const username = nomeUsuarioInput.value;
+        fetch(`http://192.168.10.20:8001/get_users?username=${username}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.users.length > 0) {
+              // Usuário existe, carregar mensagens recebidas
+              fetch(
+                `http://192.168.10.20:8001/get_messages_for_user/${username}`
+              )
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                  }
+                  return response.json();
+                })
+                .then((data) => {
+                  const messages = data.messages;
+                  // Exibir as mensagens recebidas no campo msgRecebida
+                  msgRecebidaDiv.innerHTML = messages
+                    .map(
+                      (msg) =>
+                        `<p><strong>${msg.sender}:</strong> ${msg.message}</p>`
+                    )
+                    .join("");
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            } else {
+              // Usuário não existe
+              console.log("Usuário não encontrado");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+
+      // Função para carregar a lista de usuários
+      fetch("http://192.168.10.20:8001/get_users")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const users = data.users;
+          // Exibir a lista de usuários
+          usuariosUl.innerHTML = users
+            .map((user) => `<li>${user.username}</li>`)
+            .join("");
+
+          // Adicionar evento de clique para os usuários da lista
+          usuariosUl.addEventListener("click", function (event) {
+            if (event.target.tagName === "LI") {
+              const recipientUsername = event.target.textContent;
+              // Preencher o campo de mensagem com o nome do usuário selecionado
+              enviarMsgTextarea.value = `@${recipientUsername} `;
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    });
+  </script>
+  <script src="../script.js"></script>
+</html>

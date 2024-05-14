@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+
+    
+    <title>Consultar Entregas</title>
+  </head>
+  <body>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Dados Excluidos com sucesso!</p>
+      </div>
+    </div>
+    <div id="menu-options">
+      <ul>
+        <a href="/index.html"><li>Registrar Entrega</li></a>
+        <a href="/pages/consultar.html"><li>Consultar Entregas</li></a>
+        <a href=""></a>
+        <a href="/pages/registrar.html"><li>Registra-Se No Chat</li></a>
+      </ul>
+    </div>
+    <header>
+      <img id="menu-icon" src="/img/barra-de-menu.png" alt="" />
+      
+      <!-- <img id="cha" src="/img/marijuana.png" alt="" />
+      <img id="po" src="/img/cocaina.png" alt="" />
+      <img id="bala" src="/img/mdma.png" alt="" />
+      <img id="lsd" src="/img/lsd.png" alt="" />
+      <img id="ghb" src="/img/ghb.png" alt="" /> -->
+    </header>
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div class="column">
+        <!-- <span style="display: none">ID:</span> -->
+        <input type="text" id="id" style="display: none" placeholder="ID" readonly />
+        <span>Nome Do Motoca</span>
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+        <span>Data</span>
+        <input id="data-entrega" type="text" onblur="formatarData()" />
+
+        <div id="btns">
+          <button id="consulta-btn">Consultar</button>
+        </div>
+      </div>
+    </div>
+    <div id="data-list"></div>
+
+    <div id="modal-confirm" class="modal">
+      <div class="modal-content">
+        <p style="margin-left: -12px;">Deseja Excluir os Dados?</p>
+        <div id="modalbtn">
+          <button id="confirmButton">Sim</button>
+          <button id="cancelButton">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("consulta-btn").addEventListener("click", function () {
+        const nomeMotoca = document.getElementById("nome-motoca").value;
+
+        fetch("https://registrodeentregas.pythonanywhere.com/dados")
+          .then((response) => response.json())
+          .then((data) => {
+            const dataList = document.getElementById("data-list");
+            dataList.innerHTML = "";
+            data.forEach((item) => {
+              if (item.nomeMotoca === nomeMotoca) {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                  <br/>
+                  <span class="name">Número Do Registro: </span> <span class="item" id="id" style="color:rgb(165, 7, 7);">${item.id} <img style="margin: -5px; margin-left: 10px;" src="/img/bloquear.png" onclick="deleteData(${item.id})"></span><br>
+                  <span class="name">Nome Do Motoca: </span> <span class="item" id="nome-motoca">${item.nomeMotoca}</span><br>
+                  <span class="name">Endereço Da Entrega: </span><span class="item">${item.enderecoEntrega}</span><br>
+                  <span class="name">Descrição do Produto: </span><span class="item">${item.descricaoProduto}</span><br>
+                  <span class="name">Valor Aproximado Da Entrega: </span><span class="item">${item.valorAproximado}</span><br>
+                  <span class="name">Forma De Pagamento: </span><span class="item">${item.formaPagamento}</span><br>
+                  <span class="name">Data Da Entrega: </span><span class="item">${item.dataEntrega}</span><br>
+                `;
+                dataList.appendChild(listItem);
+              }
+            });
+          })
+          .catch((error) => console.error("Erro ao buscar dados:", error));
+      });
+
+      function formatarData() {
+        let inputData = document.getElementById("data-entrega").value;
+        let dataFormatada = inputData.replace(/^(\d{2})(\d{2})(\d{2})$/, "$1/$2/$3");
+        document.getElementById("data-entrega").value = dataFormatada;
+      }
+
+      function deleteData(id) {
+        var modalConfirm = document.getElementById("modal-confirm");
+        modalConfirm.style.display = "block";
+
+        var confirmButton = document.getElementById("confirmButton");
+        confirmButton.addEventListener("click", function () {
+          fetch(`https://registrodeentregas.pythonanywhere.com/excluir-dados/${id}`, {
+            method: 'DELETE'
+          })
+          .then(response => {
+            if (response.ok) {
+              document.getElementById("myModal").style.display = "block";
+              // Recarrega a página ou atualiza a lista de itens após a exclusão
+            } else {
+              alert('Erro ao apagar o item.');
+            }
+          })
+          .catch(error => console.error("Erro ao apagar item:", error));
+
+          modalConfirm.style.display = "none";
+        });
+
+        var cancelButton = document.getElementById("cancelButton");
+        cancelButton.addEventListener("click", function () {
+          modalConfirm.style.display = "none";
+        });
+      }
+
+      var closeButton = document.querySelector(".close");
+      var modal = document.getElementById("myModal");
+
+      closeButton.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+    </script>
+    <script src="../script.js"></script>
+  </body>
+</html>

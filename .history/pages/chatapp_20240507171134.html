@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Chat App</title>
+  </head>
+  <body>
+    <h1>Simple Chat App</h1>
+    <h2>Register User</h2>
+    <form id="registerForm">
+      <label for="username">Username:</label>
+      <label for="isAdmin">Is Admin:</label>
+      <input type="text" id="username" name="username" required autocomplete="username">
+      <input type="checkbox" id="isAdmin" name="isAdmin" autocomplete="off">
+      <button type="submit">Register</button>
+
+    </form>
+
+    <h2>Send Message</h2>
+    <form id="messageForm">
+      <label for="message">Message:</label>
+      <input type="text" id="message" name="message" required autocomplete="off">
+      <button type="submit">Send Message</button>
+    </form>
+
+    <h2>Messages</h2>
+    <ul id="messageList"></ul>
+
+    <script>
+      const registerForm = document.getElementById("registerForm");
+      const messageForm = document.getElementById("messageForm");
+      const messageList = document.getElementById("messageList");
+
+      registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        const isAdmin = document.getElementById("isAdmin").checked;
+
+        const response = await fetch("http://192.168.10.20:8001/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username: username, is_admin: isAdmin }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+      });
+
+      messageForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const message = document.getElementById("message").value;
+
+        
+
+        const data = await response.json();
+        console.log(data);
+      });
+
+      const fetchMessages = async () => {
+        const response = await fetch("http://192.168.10.20:8001/get_messages");
+        const data = await response.json();
+        const messages = data.messages;
+
+        messageList.innerHTML = "";
+        messages.forEach((msg) => {
+          const li = document.createElement("li");
+          li.textContent = msg;
+          messageList.appendChild(li);
+        });
+      };
+
+      // Fetch messages on initial load
+      fetchMessages();
+    </script>
+  </body>
+</html>

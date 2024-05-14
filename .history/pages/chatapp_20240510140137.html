@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <title>Chatapp</title>
+  </head>
+  <body>
+    <h1>Chat App</h1>
+
+    <h2>Register User</h2>
+    <div id="cdsform" style="display: none;">
+      <button id="registrado">Já É Registrado ?</button>
+      <button id="registrar">Já Sou Registrado!</button>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" />
+      <label for="isAdmin">Admin:</label>
+      <input type="checkbox" id="isAdmin" name="isAdmin" />
+      <button id="registerBtn">Register</button>
+    </div>
+    <h2>User List</h2>
+    <ul id="userList"></ul>
+
+    <h2>Chat</h2>
+    <div id="chatBox"></div>
+
+    <h3>Send Message</h3>
+    <select id="recipientSelect"></select>
+    <input type="text" id="message" name="message" />
+    <button id="sendBtn">Send</button>
+  </body>
+  <script>
+    const registerBtn = document.getElementById("registerBtn");
+    const userList = document.getElementById("userList");
+    const recipientSelect = document.getElementById("recipientSelect");
+    const messageInput = document.getElementById("message");
+    const sendBtn = document.getElementById("sendBtn");
+    const chatBox = document.getElementById("chatBox");
+
+    registerBtn.addEventListener("click", async () => {
+      const username = document.getElementById("username").value;
+      const isAdmin = document.getElementById("isAdmin").checked;
+
+      const data = {
+        username: username,
+        isAdmin: isAdmin,
+      };
+
+      const response = await fetch("http://192.168.10.20:8001/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      alert(result.message);
+    });
+
+    sendBtn.addEventListener("click", async () => {
+      const recipient = recipientSelect.value;
+      const message = messageInput.value;
+
+      const data = {
+        sender_username: "current_user", // Replace 'current_user' with the actual current user
+        recipient_username: recipient,
+        message: message,
+      };
+
+      const response = await fetch(
+        "http://192.168.10.20:8001/send_private_message",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const result = await response.json();
+      alert(result.message);
+    });
+
+    function updateRecipientList(users) {
+      recipientSelect.innerHTML = "";
+      users.forEach((user) => {
+        const option = document.createElement("option");
+        option.value = user.username;
+        option.innerText = user.username;
+        recipientSelect.appendChild(option);
+      });
+    }
+
+    async function getUsers() {
+      const response = await fetch("http://192.168.10.20:8001/get_users");
+      const data = await response.json();
+
+      updateRecipientList(data.users);
+    }
+
+    getUsers();
+
+    socket = io.connect("http://192.168.10.20:8001");
+
+    socket.on("new_private_message", (data) => {
+      chatBox.innerHTML += `<p><b>${data.sender}</b>: ${data.message}</p>`;
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/socket.io@4.0.1/dist/socket.io.min.js"></script>
+</html>

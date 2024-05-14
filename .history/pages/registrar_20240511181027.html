@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../style/styles.css">
+	<title>Registrar-Se No Chat</title>
+</head>
+<body>
+	<header>
+		<header id="ChatApp">
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+      <div id="menu-options">
+        <ul>
+          <a href="/index.html"><li>Registrar Entrega</li></a>
+          <a href="/pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="/pages/consultar.html"><li>Consultar Entregas</li></a>
+					<a href="/pages/editar.html"><li>Editar Entrega</li></a>
+					<a href="/pages/chatapp.html"><li>Chat</li></a>
+        </ul>
+      </div>
+			<h1 id="textRegister" >Registar-Se No Chat</h1>
+	</header>
+	<div id="Registrar">
+		<span>Digite Seu Nome</span> <br>
+		<input placeholder="Seu Nome" type="text">
+		<button id="btsRegistrar">Registrar</button>
+	</div>
+</body>
+<script>
+  document.getElementById("btsRegistrar").addEventListener("click", function() {
+    var username = document.getElementById("usernameInput").value;
+    var isAdmin = false; // Por padrão, não é um administrador
+
+    // Crie um objeto com os dados do usuário
+    var userData = {
+      username: username,
+      isAdmin: isAdmin
+    };
+
+    // Faça uma requisição AJAX para registrar o usuário
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://seu-backend-url/register", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+        alert(response.message); // Exibe a mensagem de retorno do servidor
+      }
+    };
+    xhr.send(JSON.stringify(userData));
+  });
+</script>
+<script src="../script.js"></script>
+</html>

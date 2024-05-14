@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    
+   
+    <title>Consultar Entregas</title>
+  </head>
+    <body>
+		<div id="menu-options">
+        <ul>
+          <a href="/index.html"><li>Registrar Entrega</li></a>
+          <a href="/pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="/pages/editar.html"><li>Editar Entrega</li></a>
+          <a href="/pages/registrar.html"><li>Registrar-Se No Chat</li></a>
+          <a href="/pages/chatapp.html"><li>Chat</li></a>
+        </ul>
+
+      </div>
+    </div>
+    <header>
+      <img id="menu-icon" src="/img/barra-de-menu.png" alt="" />
+        <!-- <img id="cha" src="/img/marijuana.png" alt="" />
+        <img id="po" src="/img/cocaina.png" alt="" />
+        <img id="bala" src="/img/mdma.png" alt="" />
+        <img id="lsd" src="/img/lsd.png" alt="" />
+        <img id="ghb" src="/img/ghb.png" alt="" /> -->
+    </header>
+        <div id="myModal" class="modal">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Dados Atualizados com sucesso!</p>
+      </div>
+    </div>
+
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div class="column">
+        <!-- <span style="display: none">ID:</span> -->
+        <input
+          type="text"
+          id="id"
+          style="display: none"
+          placeholder="ID"
+          readonly
+        />
+        <span>Nome Do Motoca</span>
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+
+        <!-- <span>Endereço Da Entrega</span>
+        <input
+          type="text"
+          id="endereço-entrega"
+          placeholder="Digite O Endereço"
+        /> -->
+
+        <!-- <span>Material</span>
+        <input
+          type="text"
+          id="descricao-produto"
+          placeholder="Tipo e quantidade do Material"
+        />
+
+         <span>Pagamamento</span>
+        <input id="forma-pagamento" type="text" placeholder="Informe o Metodo De Pagamento" />
+        -->
+        <span>Data</span>
+        <input id="data-entrega" type="text">
+
+         <div id="btns">
+          <button id="consulta-btn">Consultar</button>
+          <button id="gerar-relatorio-btn">Relatório</button>
+        </div>
+      </div>
+    </div>
+        <div id="data-list"></div>
+  </body>
+  <script>
+    document
+      .getElementById("consulta-btn")
+      .addEventListener("click", function () {
+        const nomeMotoca = document.getElementById("nome-motoca").value;
+
+        fetch("https://registrodeentregas.pythonanywhere.com/dados")
+          .then((response) => response.json())
+          .then((data) => {
+            const dataList = document.getElementById("data-list");
+            dataList.innerHTML = "";
+            data.forEach((item) => {
+              if (
+                item.nomeMotoca === nomeMotoca
+              ) {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                <br/>
+              <span class="name" >Número Do Registro: </span> <span class="item" id="id" style="color:rgb(165, 7, 7);">${item.id}<img style="margin: -5px;  margin-left: 10px;" src="/img/atualizada.png" ></img></span><br>
+              <span class="name" >Nome Do Motoca: </span> <span class="item" id="nome-motoca">${item.nomeMotoca}</img></span><br>
+              <span class="name" >Endereço Da Entrega: </span><span class="item">${item.enderecoEntrega}</span><br>
+              <span class="name" >Descrição do Produto: </span><span class="item">${item.descricaoProduto}</span><br>
+              <span class="name" >Valor Aproximado Da Entrega: </span><span class="item">${item.valorAproximado}</span><br>
+              <span class="name" >Forma De Pagamento: </span><span class="item">${item.formaPagamento}</span><br>
+              <span class="name" >Data Da Entrega: </span><span class="item">${item.dataEntrega}</span><br>
+            `;
+            const Atualizarid = document.getElementById("id");
+
+            listItem.addEventListener("click", function () {
+                  window.location.href = `editar.html?id=${item.id}`;
+                });
+                dataList.appendChild(listItem);
+              }
+            });
+          })
+          .catch((error) => console.error("Erro ao buscar dados:", error));
+      });
+     </script>
+     <script>
+     function formatarData() {
+    let inputData = document.getElementById("data-entrega").value;
+
+    let dataFormatada = inputData.replace(/^(\d{2})(\d{2})(\d{2})$/, "$1/$2/$3");
+
+    document.getElementById("data-entrega").value = dataFormatada;
+}
+    document
+      .getElementById("gerar-relatorio-btn")
+      .addEventListener("click", function () {
+        const nomeMotoca = document.getElementById("nome-motoca").value;
+      
+        fetch("https://registrodeentregas.pythonanywhere.com/dados")
+          .then((response) => response.json())
+          .then((data) => {
+            const content = data
+              .map((item) => {
+                if (
+                  item.nomeMotoca === nomeMotoca 
+                ) {
+                  return `
+                            Número Do Registro: ${item.id}
+                            Nome Do Motoca: ${item.nomeMotoca}
+                            Endereço Da Entrega: ${item.enderecoEntrega}
+                            Material E Quantidade: ${item.descricaoProduto}
+                            Valor Aproximado Da Entrega: ${item.valorAproximado}
+                            Forma De Pagamento: ${item.formaPagamento}
+                            Data Da Entrega: ${item.dataEntrega}
+                            -----------------------------
+                        `;
+                }
+              })
+              .join("");
+
+            const blob = new Blob([content], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "Relatorio_Entregas.txt";
+            a.click();
+          })
+          .catch((error) => console.error("Erro ao buscar dados:", error));
+      });
+  </script>
+  <script src="../script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.12.0/docxgen.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.12.0/docxgen.js"></script>
+</html>

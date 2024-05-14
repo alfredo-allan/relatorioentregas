@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <title>ChatApp</title>
+  </head>
+  <body>
+    <header id="ChatApp">
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+      <div id="menu-options">
+        <ul>
+          <a href="/index.html"><li>Registrar Entrega</li></a>
+          <a href="/pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="/pages/consultar.html"><li>Consultar Entregas</li></a>
+          <a href="/pages/registrar.html"><li>Registar-Se</li></a>
+        </ul>
+      </div>
+      <h1 id="textchat">Chat Entregas</h1>
+      <!-- <img id="imgchat" src="../img/bater-papo.png" alt="" /> -->
+    </header>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Mensagem Enviada Com Sucesso!</p>
+      </div>
+    </div>
+    <div id="login">
+      <span>Nome</span> <br />
+      <input id="nomeusuario" type="text" placeholder="Digite Seu Nome" />
+      <img id="utlizador" src="../img/do-utilizador.png" alt="" />
+    </div>
+    <span>Escolher Usuário</span>
+    <ul></ul>
+    <div id="usuarios"></div>
+    <img id="multiUsu" src="../img/silhueta-de-multiplos-usuarios.png" alt="" />
+    <br />
+    <input id="lstUsu" type="text" />
+    <button style="letter-spacing: 6px" id="ctsUsu">Selecionar</button>
+
+    <div id="msgEnviar">
+      <span>Enviar Mensagem</span> <br />
+      <textarea
+        placeholder="Enviar Menssagem Para Quem ?"
+        id="enviarMsg"
+        type="text"
+      ></textarea>
+      <button id="enviarmsg">Enviar</button>
+      <button id="delMsg">Deletar Tudo</button>
+      <!-- <img id="imgEnviarmsg" src="../img/enviar-mensagem.png" alt="" /> -->
+    </div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const nomeUsuarioInput = document.getElementById("nomeusuario");
+
+      // Variável global para armazenar o nome de usuário
+      let username;
+      const lstUsuInput = document.getElementById("lstUsu");
+      const ctsUsuButton = document.getElementById("ctsUsu");
+      const enviarMsgTextarea = document.getElementById("enviarMsg");
+      const deleteMsgButton = document.getElementById("delMsg");
+      let intervalId;
+      let typing = false; // Variável para controlar se o usuário está digitando ou não
+
+      // Evento de clique no botão "Selecionar"
+      ctsUsuButton.addEventListener("click", function () {
+        const selectedUsername = lstUsuInput.value;
+        if (selectedUsername) {
+          // Preencher o campo de mensagem com o nome do usuário selecionado
+          enviarMsgTextarea.value = `@${selectedUsername} `;
+        } else {
+          console.log("Nenhum usuário selecionado.");
+        }
+      });
+
+      // Evento de alteração no campo de nome de usuário
+      nomeUsuarioInput.addEventListener("change", function () {
+       // Verifica se o usuário está digitando
+       if (!isTyping) {
+       // Se não estiver digitando, então faz a requisição
+       username = nomeUsuarioInput.value; // Atribuir valor a variável global
+           fetch(`https://registrodeentregas.pythonanywhere.com/get_users?username=${username}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const users = data.users;
+            if (users.length > 0) {
+              // Usuário encontrado, você pode fazer o que quiser aqui
+              console.log(`Usuário ${username} encontrado`);
+              // Carregar mensagens enviadas para o usuário
+              fetch(
+                `https://registrodeentregas.pythonanywhere.com/get_messages_for_user/${username}`
+              )
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                  }
+                  return response.json();
+                })
+                .then((data) => {
+                  const messages = data.messages;
+                  // Exibir as mensagens recebidas no campo msgInput
+                  enviarMsgTextarea.value = messages
+                    .map((msg) => `${msg.sender}: ${msg.message}`)
+                    .join("\n");
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            } else {
+              // Usuário não encontrado
+              console.log(`Usuário ${username} não encontrado`);
+              // Limpar o campo de mensagens
+              enviarMsgTextarea.value = "";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+
+      // Evento de clique no botão "Enviar"
+      document
+        .getElementById("enviarmsg")
+        .addEventListener("click", function () {
+          const recipientUsername = lstUsuInput.value;
+          const message = enviarMsgTextarea.value;
+          if (recipientUsername && message) {
+            // Enviar mensagem para o destinatário
+            fetch(
+              "https://registrodeentregas.pythonanywhere.com/send_private_message",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  sender_username: username, // Usar a variável global
+                  recipient_username: recipientUsername,
+                  message: message,
+                }),
+              }
+            )
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log("Mensagem enviada com sucesso:", data.message);
+                // Limpar o campo de mensagem após o envio
+                enviarMsgTextarea.value = "";
+                typing = false; // Define que o usuário parou de digitar
+                startInterval(); // Retomar o intervalo após o envio da mensagem
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, selecione um destinatário e escreva uma mensagem."
+            );
+          }
+
+          // Aqui você pode pausar o intervalo novamente após o envio da mensagem
+          pauseInterval();
+        });
+
+      // Evento de clique no botão "Deletar Mensagens"
+      deleteMsgButton.addEventListener("click", function () {
+        if (username) {
+          fetch(
+            `https://registrodeentregas.pythonanywhere.com/delete_messages_for_user/${username}`,
+            {
+              method: "DELETE",
+            }
+          )
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data.message);
+              // Limpar o campo de mensagem após a exclusão
+              enviarMsgTextarea.value = "";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        } else {
+          console.log("Por favor, insira um nome de usuário válido.");
+        }
+      });
+
+      // Função para verificar e atualizar o nome de usuário
+      function checkAndUpdateUsername() {
+        const username = nomeUsuarioInput.value;
+        fetch(
+          `https://registrodeentregas.pythonanywhere.com/get_users?username=${username}`
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const users = data.users;
+            if (users.length > 0) {
+              // Usuário encontrado
+              console.log(`Usuário ${username} encontrado`);
+              // Carregar mensagens enviadas para o usuário
+              fetch(
+                `https://registrodeentregas.pythonanywhere.com/get_messages_for_user/${username}`
+              )
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                  }
+                  return response.json();
+                })
+                .then((data) => {
+                  const messages = data.messages;
+                  // Exibir as mensagens recebidas no campo msgInput
+                  enviarMsgTextarea.value = messages
+                    .map((msg) => `${msg.sender}: ${msg.message}`)
+                    .join("\n");
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            } else {
+              // Usuário não encontrado
+              console.log(`Usuário ${username} não encontrado`);
+              // Limpar o campo de mensagens
+              enviarMsgTextarea.value = "";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      // Função para iniciar o intervalo
+      function startInterval() {
+        // Verifica se o usuário não está digitando antes de iniciar o intervalo
+        if (!typing) {
+          intervalId = setInterval(checkAndUpdateUsername, 40000);
+        }
+      }
+
+      // Função para pausar o intervalo
+      function pauseInterval() {
+        clearInterval(intervalId);
+      }
+
+      // Iniciar o intervalo quando a página é carregada
+      startInterval();
+
+      // Evento de entrada no campo de texto
+      enviarMsgTextarea.addEventListener("input", function () {
+        pauseInterval(); // Pausar o intervalo enquanto o usuário digita
+        typing = true; // Define que o usuário está digitando
+      });
+
+      // Evento de clique no botão de enviar mensagem
+      document
+        .getElementById("enviarmsg")
+        .addEventListener("click", function () {
+          typing = false; // Define que o usuário parou de digitar
+          startInterval(); // Retomar o intervalo após o envio da mensagem
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      const nomeUsuarioInput = document.getElementById("nomeusuario");
+      let username;
+      const lstUsuInput = document.getElementById("lstUsu");
+      const ctsUsuButton = document.getElementById("ctsUsu");
+      const enviarMsgTextarea = document.getElementById("enviarMsg");
+      const deleteMsgButton = document.getElementById("delMsg");
+      let intervalId;
+      let typing = false;
+      let lastTypingTime; // Para rastrear o tempo da última digitação
+
+
+      ctsUsuButton.addEventListener("click", function () {
+        const selectedUsername = lstUsuInput.value;
+        if (selectedUsername) {
+          enviarMsgTextarea.value = `@${selectedUsername} `;
+        } else {
+          console.log("Nenhum usuário selecionado.");
+        }
+      });
+
+      nomeUsuarioInput.addEventListener("change", function () {
+        username = nomeUsuarioInput.value;
+        // Restante do código para verificar o nome do usuário
+      });
+
+      document
+        .getElementById("enviarmsg")
+        .addEventListener("click", function () {
+          const recipientUsername = lstUsuInput.value;
+          const message = enviarMsgTextarea.value;
+          if (recipientUsername && message) {
+            // Restante do código para enviar a mensagem
+            typing = false;
+            lastTypingTime = new Date().getTime(); // Resetar o tempo da última digitação
+            startInterval();
+          } else {
+            console.log(
+              "Por favor, selecione um destinatário e escreva uma mensagem."
+            );
+          }
+        });
+
+      function startInterval() {
+        clearInterval(intervalId); // Limpar o intervalo anterior
+        intervalId = setInterval(checkAndUpdateUsername, 10000); // Iniciar um novo intervalo
+      }
+
+      function pauseInterval() {
+        clearInterval(intervalId);
+      }
+
+      // Adicionar um evento de entrada no campo de texto para rastrear quando o usuário está digitando
+      enviarMsgTextarea.addEventListener("input", function () {
+      isTyping = true; // Define que o usuário está digitando
+      });
+        lastTypingTime = new Date().getTime();
+        pauseInterval(); // Pausar o intervalo enquanto o usuário digita
+      });
+
+      // Verificar e atualizar o nome do usuário apenas após um período de inatividade
+      function checkAndUpdateUsername() {
+        const currentTime = new Date().getTime();
+        const timeDiff = currentTime - lastTypingTime;
+        if (timeDiff >= 1000 && !typing) {
+          // Verificar se o usuário não está digitando e passaram pelo menos 1 segundo desde a última digitação
+          // Restante do código para verificar e atualizar o nome do usuário
+        }
+      }
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      const enviarMsgTextarea = document.getElementById("enviarMsg");
+      let typingTimeout;
+
+      // Função para bloquear ações na página enquanto estiver digitando
+      function bloquearAcoes() {
+        // Bloquear qualquer ação na página
+        console.log("Bloqueando ações na página...");
+        // Adicione aqui o código para bloquear qualquer ação na página, como desativar botões, etc.
+      }
+
+      // Função para liberar ações na página após 20 segundos de inatividade
+      function liberarAcoes() {
+        // Liberar ações na página
+        console.log("Liberando ações na página...");
+        // Adicione aqui o código para liberar as ações na página, como ativar botões, etc.
+      }
+
+      // Evento de teclado para detectar quando o usuário está digitando
+      enviarMsgTextarea.addEventListener("input", function () {
+        // Bloquear ações na página enquanto o usuário estiver digitando
+        bloquearAcoes();
+
+        // Limpar o timeout se houver algum
+        clearTimeout(typingTimeout);
+
+        // Definir um novo timeout para 20 segundos
+        typingTimeout = setTimeout(function () {
+          // Liberar ações após 20 segundos de inatividade
+          liberarAcoes();
+        }, 20000); // 20 segundos = 20000 milissegundos
+      });
+    });
+    var closeButton = document.querySelector(".close");
+    var modal = document.getElementById("myModal");
+
+    // Adicionando um evento de clique no botão de fechar
+    closeButton.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  </script>
+  <script src="../script.js"></script>
+</html>

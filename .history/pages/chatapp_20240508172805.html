@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+  </head>
+  <body>
+    <h1>Chat App</h1>
+
+    <h2>Register User</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="checkbox" id="is_admin" /> Check if Admin
+    <button onclick="registerUser()">Register User</button>
+
+    <h2>Send Private Message</h2>
+    <input type="text" id="sender_username" placeholder="Sender Username" />
+    <input
+      type="text"
+      id="recipient_username"
+      placeholder="Recipient Username"
+    />
+    <input type="text" id="message" placeholder="Message" />
+    <button onclick="sendPrivateMessage()">Send Private Message</button>
+
+    <script>
+      function registerUser() {
+        let username = document.getElementById("username").value;
+        let is_admin = document.getElementById("is_admin").checked;
+
+        fetch("http://localhost:8001/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, is_admin }),
+        })
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((error) => console.error("Error registering user:", error));
+      }
+
+      function sendPrivateMessage() {
+        let sender_username = document.getElementById("sender_username").value;
+        let recipient_username =
+          document.getElementById("recipient_username").value;
+        let message = document.getElementById("message").value;
+
+        fetch("http://localhost:8001/send_private_message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sender_username,
+            recipient_username,
+            message,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((error) =>
+            console.error("Error sending private message:", error)
+          );
+      }
+    </script>
+  </body>
+</html>

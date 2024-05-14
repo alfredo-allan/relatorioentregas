@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat App</title>
+  </head>
+  <body>
+    <h1>Register User</h1>
+    <form id="registerForm">
+      <input
+        type="text"
+        id="username"
+        name="username"
+        required
+        autocomplete="username"
+      />
+
+      <input type="checkbox" id="isAdmin" name="isAdmin" />
+
+      <button type="submit">Register User</button>
+    </form>
+
+    <h1>Send Message</h1>
+    <form id="sendMessageForm">
+      <input
+        type="text"
+        id="username"
+        name="username"
+        required
+        autocomplete="username"
+      />
+
+      <label for="message">Message:</label>
+      <input type="text" id="message" name="message" required />
+      <button type="submit">Send Message</button>
+    </form>
+
+    <h1>Received Messages</h1>
+    <ul id="messageList"></ul>
+
+    <script>
+      const registerForm = document.getElementById("registerForm");
+      const sendMessageForm = document.getElementById("sendMessageForm");
+      const messageList = document.getElementById("messageList");
+
+      registerForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const isAdmin = document.getElementById("isAdmin").checked;
+
+        const response = await fetch("http://127.0.0.1:5000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+						
+          },
+          body: JSON.stringify({
+            username: username,
+            is_admin: isAdmin,
+          }),
+        });
+        const data = await response.json();
+        alert(data.message);
+      });
+
+      sendMessageForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const message = document.getElementById("message").value;
+
+        const response = await fetch("http://127.0.0.1:5000/send_message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: message,
+          }),
+        });
+        const data = await response.json();
+        alert(data.message);
+      });
+
+      async function getMessages() {
+        const response = await fetch("http://127.0.0.1:5000/get_messages");
+        const data = await response.json();
+        messageList.innerHTML = "";
+        data.messages.forEach((message) => {
+          const li = document.createElement("li");
+          li.textContent = message;
+          messageList.appendChild(li);
+        });
+      }
+
+      getMessages();
+    </script>
+  </body>
+</html>

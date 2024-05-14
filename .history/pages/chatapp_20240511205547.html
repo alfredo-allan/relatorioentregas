@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <title>ChatApp</title>
+  </head>
+  <body>
+    <header id="ChatApp">
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+      <div id="menu-options">
+        <ul>
+          <a href="/index.html"><li>Registrar Entrega</li></a>
+          <a href="/pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="/pages/consultar.html"><li>Consultar Entregas</li></a>
+          <a href="/pages/registrar.html"><li>Registar-Se</li></a>
+        </ul>
+      </div>
+      <h1 id="textchat">Chat Entregas</h1>
+      <img id="imgchat" src="../img/bater-papo.png" alt="" />
+    </header>
+    <div id="login">
+      <span>Nome</span> <br />
+      <input id="nomeusuario" type="text" placeholder="Digite Seu Nome" />
+    </div>
+    <div id="message">
+      <span>Mensagem Recebida</span> <br />
+      <div id="msgRecebida">
+        <textarea id="msgInput" rows="4" disabled></textarea>
+        <!-- Alterado para <textarea> -->
+      </div>
+      <div id="msgEnviar">
+        <span>Enviar Mensagem</span> <br />
+        <textarea
+          id="enviarMsg"
+          type="text"
+        ></textarea>
+        <button id="enviarmsg">Enviar</button>
+      </div>
+      <span>Lista De Usuarios</span>
+      <ul></ul>
+      <div id="usuarios"></div>
+    </div>
+  </body>
+  <script src="../script.js"></script>
+</html>
