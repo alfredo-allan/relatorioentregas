@@ -1,0 +1,24 @@
+@media screen and (min-width: 300px) and (max-width: 799px) {
+  footer {
+    bottom: 0;
+    background-image: url("../img/employee\ of\ the\ month.png");
+    img {
+      width: 160px;
+      padding: 0px;
+      margin-left: 99px;
+      margin-right: 0px;
+      /* background-image: url("../img/employee\ of\ the\ month.png"); */
+    }
+    /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+  }
+
+  @media screen and (min-width: 800px) and (max-width: 2050px) {
+    footer {
+      img {
+        width: 218px;
+        height: 60px;
+      }
+    }
+    /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+  }
+}

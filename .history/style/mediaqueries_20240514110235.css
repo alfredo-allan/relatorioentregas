@@ -1,0 +1,35 @@
+
+@media screen and (min-width: 1000px) and (max-width: 3090px) {
+  #text-top {
+    margin-top: -22px;
+    letter-spacing: 5px;
+    font-size: 65px;
+    letter-spacing: 25px;
+  }
+  .column {
+    margin-top: -90px;
+    width: 400px;
+  }
+  #consulta.column {
+    margin-left: 117px;
+    position: fixed;
+  }
+  #data-list {
+    width: 500px;
+    height: 400px;
+    /* text-wrap: nowrap; */
+    margin: -112px;
+    margin-left: 123px;
+    .name {
+      font-size: 30px;
+    }
+    .item {
+      font-size: 30px;
+    }
+    img {
+      width: 30px;
+    }
+		
+  }
+  /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+}

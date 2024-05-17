@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../style/styles.css">
+  <link rel="stylesheet" href="../style/mediaqueries.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    <style>
+  @media screen and (min-width: 800px) and (max-width: 2050px) {
+    footer img{
+      width: 170px;
+      height: 60px;
+    }
+    /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+  }
+    @media screen and (min-width: 800px) and (max-width: 2050px) {
+    footer {
+        position: fixed;
+        margin-top: 67px;
+        margin-left: -8px;
+     
+    }
+    /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+  }
+
+@media screen and (min-width: 800px) and (max-width: 2050px) {
+  #menu-options img {
+    width: 206px;
+    position: relative;
+    margin: 13px;
+    margin-top: -44px;
+    border-bottom: 1px solid black; /* Adiciona uma linha preta na parte inferior da imagem */
+  }
+   #menu-options {
+    width: 25%;
+    height: 54vh;
+  }
+}
+  
+    </style>
+  <title>Registrar-Se No Chat</title>
+</head>
+<body>
+	<div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Usuário Cadastrado <br> Com Sucesso!</p>
+      </div>
+    </div>
+	<header>
+		<header id="ChatApp">
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+      <div id="menu-options">
+        <ul>
+           <span id="close-icon" style="color: black; position: absolute; line-height: 0; font-size: 30px;
+    margin-top: -20px; cursor: pointer;">X</span>
+          <img src="../img/4 cordassof.png" alt="">
+          <a href="../index.html"><li>Home</li></a>
+          <a href="../cdsentregas.html"><li>Registrar Entrega</li></a>
+          <a href="../pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="../pages/consultar.html"><li>Consultar Entregas</li></a>
+					<a href="../pages/chatapp.html"><li>Chat</li></a>
+          <a href="../pages/sobre.html"><li>Sobre a 4cordas</li></a>
+          <a href="../pages/instrucao.html"><li>Ajuda</li></a>
+        </ul>
+      </div>
+			<h1 id="textRegister" >Registar-Se No Chat</h1>
+	</header>
+  <div id="form">
+      <div id="consulta" class="column">
+    
+		<span>Digite Seu Nome</span> 
+		<input id="usernameInput" placeholder="Seu Nome" type="text">
+		<button id="btsRegistrar">Registrar</button>
+        </div>
+      </div>
+	<!-- <div id="Registrar">
+		<span>Digite Seu Nome</span> <br>
+		<input id="usernameInput" placeholder="Seu Nome" type="text">
+		<button id="btsRegistrar">Registrar</button>
+	</div> -->
+  <footer>
+      <img src="../img/4 cordassof.png" alt="">
+    </footer>
+   <script>
+  document.getElementById("btsRegistrar").addEventListener("click", function() {
+    var username = document.getElementById("usernameInput").value;
+    var isAdmin = false; // Por padrão, não é um administrador
+
+    // Crie um objeto com os dados do usuário
+    var userData = {
+      username: username,
+      is_admin:  // Use "is_admin" em vez de "isAdmin"
+    };
+
+    // Faça uma requisição fetch para registrar o usuário
+    fetch("/usuarios", { // Ajuste o URL para usar uma rota relativa
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(userData)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Erro ao registrar o usuário");
+      }
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById("myModal").style.display = "block";
+    })
+    .catch(error => {
+      console.error("Erro ao registrar o usuário:", error);
+    });
+  });
+
+  // Selecionando o botão de fechar e o modal
+  var closeButton = document.querySelector(".close");
+  var modal = document.getElementById("myModal");
+
+  // Adicionando um evento de clique no botão de fechar
+  closeButton.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+</script>
+
+</body>
+<script src="../script.js"></script>
+</html>

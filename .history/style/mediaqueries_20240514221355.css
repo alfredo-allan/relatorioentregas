@@ -1,0 +1,22 @@
+@media screen and (min-width: 300px) and (max-width: 600px) {
+  footer {
+    img {
+      width: 377px;
+      padding: 0px;
+    }
+  }
+  /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+}
+
+@media screen and (min-width: px) and (max-width: 600px) {
+  footer {
+    img {
+      width: 377px;
+      padding: 0px;
+    }
+  }
+  /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+}
+    width: 218px;
+    height: 60px;
+}

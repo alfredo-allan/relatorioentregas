@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./style/mediaqueries.css">
+	<link rel="stylesheet" href="./style/styles.css">
+	 <style>
+      * {
+    margin: 0;
+    padding: 0;
+}
+    #menu-icon {
+    margin-left: 15px;
+    margin-top: 12px;
+
+  }
+  
+@media screen and (min-width: 800px) and (max-width: 2050px) {
+  #menu-options img {
+    width: 206px;
+    position: relative;
+    margin: 13px;
+    margin-top: -44px;
+    border-bottom: 1px solid black; /* Adiciona uma linha preta na parte inferior da imagem */
+  }
+   #menu-options {
+    width: 25%;
+    height: 54vh;
+  }
+	#mtc {
+		border-radius: 40px;
+    margin-left: 784px;
+    width: 500px;
+    margin-top: 70px;
+}
+	}
+
+
+  @media screen and (min-width: 800px) and (max-width: 2050px) {
+    footer img{
+      width: 170px;
+      height: 60px;
+    }
+		#textmtc {
+		margin-left: 355px;
+    margin-top: 75px;
+    position: absolute;
+    width: 35%;
+		font-size: ;
+		}
+	}
+
+@media screen and (min-width: 300px) and (max-width: 600px) {
+  footer {
+        position: fixed;
+        margin: 0;
+  }
+}
+ #textmtc {
+	color: white;
+	font-family: var(--gribble-font);
+ }
+     </style>
+	<title>Home</title>
+</head>
+<body>
+	<header>
+      <img id="menu-icon" src="./img/barra-de-menu.png" alt="" />
+     
+
+        <!-- <img id="cha" src="./img/marijuana.png" alt="" />
+        <img id="po" src="./img/cocaina.png" alt="" />
+        <img id="bala" src="./img/mdma.png" alt="" />
+        <img id="lsd" src="./img/lsd.png" alt="" />
+        <img id="ghb" src="./img/ghb.png" alt="" /> -->
+    </header>
+	<div id="menu-options">
+        <ul>
+         <span id="close-icon" style="color: black; position: absolute; line-height: 0; font-size: 30px;
+    margin-top: -20px; cursor: pointer;">X</span>
+          <img src="./img/4 cordassof.png" alt=""> <br>
+          <a href="./pages/consultar.html"><li>Consultar Entregas</li></a>
+          <a href="./pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="./pages/registrar.html"><li>Registrar-Se No Chat</li></a>
+          <a href="./pages/chatapp.html"><li>Chat</li></a>
+          <a href="./pages/sobre.html"><li>Sobre a 4cordas</li></a>
+          <a href="./pages/instrucao.html"><li>Ajuda</li></a>
+
+           </ul>
+      </div>
+    </div>
+		<div id="textmtc">
+			<h1>Registro de motoboys para sua empresa</h1>
+		</div>
+		<div id="dsc">
+			<img id="mtc" src="./img/motoca.jpg" alt="">
+		</div>
+		 <footer>
+      <img src="./img/4 cordassof.png" alt="">
+    </footer>
+</body>
+<script src="./script.js"></script>
+</html>

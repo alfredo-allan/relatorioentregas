@@ -1,0 +1,15 @@
+/* Para resoluções maiores que 1920px */
+@media screen and (min-width: 1920px) {
+	
+    /* Estilos específicos para resoluções maiores que 1920px */
+}
+
+/* Para resoluções maiores que 2560px */
+@media screen and (min-width: 2560px) {
+    /* Estilos específicos para resoluções maiores que 2560px */
+}
+
+/* Para resoluções maiores que 3840px */
+@media screen and (min-width: 3840px) {
+    /* Estilos específicos para resoluções maiores que 3840px */
+}

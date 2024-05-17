@@ -1,0 +1,42 @@
+/* Para resoluções entre 1900px e 3090px */
+@media screen and (min-width: 1900px) and (max-width: 3090px) {
+  #text-top {
+    margin-top: -22px;
+    letter-spacing: 5px;
+    font-size: 65px;
+    letter-spacing: 25px;
+  }
+  .column {
+    margin-top: -90px;
+    width: 400px;
+  }
+  #consulta {
+    margin-left: 117px;
+  }
+  /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+}
+
+@media screen and (min-width: 1000px) and (max-width: 2000px) {
+  #text-top {
+    margin-top: -22px;
+    letter-spacing: 5px;
+    font-size: 65px;
+    letter-spacing: 25px;
+  }
+  .column {
+    margin-top: -90px;
+    width: 400px;
+  }
+  #consulta.column {
+    margin-left: 117px;
+  }
+  #data {
+    width: 500px;
+    height: 400px;
+    /* text-wrap: nowrap; */
+    position: absolute;
+    margin: -112px;
+    margin-left: 123px;
+  }
+  /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+}

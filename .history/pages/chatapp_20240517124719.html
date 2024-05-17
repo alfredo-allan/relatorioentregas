@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/mediaqueries.css" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <style>
+      @media screen and (min-width: 800px) and (max-width: 2050px) {
+        footer img {
+          width: 170px;
+          height: 60px;
+        }
+        /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+      }
+      * {
+        padding: 0;
+      }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #00ff7f;
+        margin: 0;
+        padding: 0;
+        margin-left: -7px;
+      }
+      @media screen and (min-width: 300px) and (max-width: 600px) {
+        footer {
+          height: 6vh;
+        }
+      }
+
+      @media screen and (min-width: 800px) and (max-width: 2050px) {
+        #menu-options img {
+          width: 206px;
+          position: relative;
+          margin: 13px;
+          margin-top: -44px;
+          border-bottom: 1px solid black; /* Adiciona uma linha preta na parte inferior da imagem */
+        }
+        #menu-options {
+          width: 25%;
+          height: 54vh;
+        }
+        footer {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          background-color: #00ff7f;
+          margin: 0;
+          padding: 0;
+          margin-left: -7px;
+        }
+      }
+    </style>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    <title>ChatApp</title>
+  </head>
+  <body>
+    <header id="ChatApp">
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+      <div id="menu-options">
+        <ul>
+          <span
+            id="close-icon"
+            style="
+              color: black;
+              position: absolute;
+              line-height: 0;
+              font-size: 30px;
+              margin-top: -20px;
+              cursor: pointer;
+            "
+            >X</span
+          >
+          <img src="../img/4 cordassof.png" alt="" />
+          <br />
+          <a href="../index.html"><li>Home</li></a>
+          <a href="../cdsentregas.html"><li>Registrar Entrega</li></a>
+          <a href="../pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="../pages/consultar.html"><li>Consultar Entregas</li></a>
+          <a href="../pages/registrar.html"><li>Registar-Se</li></a>
+          <a href="../pages/sobre.html"><li>Sobre a 4cordas</li></a>
+          <a href="../pages/instrucao.html"><li>Ajuda</li></a>
+        </ul>
+      </div>
+      <!-- <h1 id="textchat">Chat Entregas</h1> -->
+      <!-- <img id="imgchat" src="../img/bater-papo.png" alt="" /> -->
+    </header>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Mensagem Enviada Com Sucesso!</p>
+      </div>
+    </div>
+    <div id="form">
+      <div id="consulta" class="column">
+        <span>Nome</span>
+        <input id="nomeusuario" type="text" placeholder="Digite Seu Nome" />
+        <span>Escolher Usuário</span>
+        <input placeholder="Nome Do Destinátario" id="lstUsu" type="text" />
+        <div id="msgEnviar">
+          <span style="text-align: center">Enviar Mensagem</span> <br />
+          <textarea
+            placeholder="Escreva A Mensagem...."
+            id="enviarMsg"
+            type="text"
+          ></textarea>
+          <div id="btns">
+            <button id="enviarmsg">Enviar</button>
+            <button id="delMsg">Deletar Tudo</button>
+          </div>
+        </div>
+      </div>
+      <!-- <img id="imgEnviarmsg" src="../img/enviar-mensagem.png" alt="" /> -->
+    </div>
+    <footer>
+      <img src="../img/4 cordassof.png" alt="" />
+    </footer>
+    <script src="../script.js"></script>
+    <script>
+      function adicionarEventoVerificacao(inputId) {
+        const input = document.getElementById(inputId);
+        input.addEventListener("input", () => {
+          const valorInput = input.value.trim();
+          if (valorInput !== "") {
+            fetch(`http://192.168.10.20:8039/usuarios/${valorInput}`)
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Usuário não encontrado");
+                }
+                return response.json();
+              })
+              .then((usuario) => {
+                console.log(usuario);
+                // Faça o que precisar com o usuário retornado
+              })
+              .catch((error) => {
+                console.error(error.message);
+                // Lida com o erro, por exemplo, exibir uma mensagem para o usuário
+              });
+          }
+        });
+      }
+
+      adicionarEventoVerificacao("nomeusuario");
+      adicionarEventoVerificacao("lstUsu");
+    </script>
+    
+  </body>
+</html>

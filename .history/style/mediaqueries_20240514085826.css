@@ -1,0 +1,23 @@
+/* Para resoluções maiores que 1920px */
+@media screen and (min-width: 1920px) {
+  h1#text-top {
+    margin-top: -22px;
+    letter-spacing: 5px;
+    font-size: 65px;
+  }
+  /* Estilos específicos para resoluções maiores que 1920px */
+}
+
+/* Para resoluções maiores que 2560px */
+@media screen and (min-width: 2560px) {
+	 h1#text-top {
+    margin-top: -22px;
+    letter-spacing: 5px;
+    font-size: 65px;
+  /* Estilos específicos para resoluções maiores que 2560px */
+
+
+/* Para resoluções maiores que 3840px */
+@media screen and (min-width: 3840px) {
+  /* Estilos específicos para resoluções maiores que 3840px */
+}

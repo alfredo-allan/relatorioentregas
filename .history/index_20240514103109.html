@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style/styles.css" />
+    <link rel="stylesheet" href="./style/mediaqueries.css">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <title>Registro De Entregas</title>
+  </head>
+  <body>
+		<div id="menu-options">
+        <ul>
+          <span id="close-icon" style="color: black" "margin-left: 200px";
+    position: absolute;
+    line-height: 0;;">X</span>
+          <a href="./pages/consultar.html"><li>Consultar Entregas</li></a>
+          <a href="./pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="./pages/registrar.html"><li>Registrar-Se No Chat</li></a>
+          <a href="./pages/chatapp.html"><li>Chat</li></a>
+
+           </ul>
+      </div>
+    </div>
+    <header>
+      <img id="menu-icon" src="./img/barra-de-menu.png" alt="" />
+     
+
+        <!-- <img id="cha" src="./img/marijuana.png" alt="" />
+        <img id="po" src="./img/cocaina.png" alt="" />
+        <img id="bala" src="./img/mdma.png" alt="" />
+        <img id="lsd" src="./img/lsd.png" alt="" />
+        <img id="ghb" src="./img/ghb.png" alt="" /> -->
+    </header>
+        <div id="myModal" class="modal">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Dados salvos com sucesso!</p>
+      </div>
+    </div>
+    
+
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div class="column">
+        <!-- <span style="display: none">ID:</span> -->
+        <input
+          type="text"
+          id="id"
+          style="display: none"
+          placeholder="ID"
+          readonly
+        />
+        <span>Nome Do Motoca</span>
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+
+        <span>Endereço Da Entrega</span>
+        <input
+          type="text"
+          id="endereco-entrega"
+          placeholder="Digite O Endereço"
+        />
+
+        <span>Material</span>
+        <input
+          type="text"
+          id="descricao-produto"
+          placeholder="Tipo e quantidade do Material"
+        />
+        <span>Valor Aproximado Da Entrega</span>
+        <input type="text" id="valorAproximado" placeholder="Valor Aproximado">
+
+         <span>Pagamamento</span>
+        <input id="forma-pagamento" type="text" placeholder="Informe o Metodo De Pagamento" />
+       
+        <span>Data</span>
+        <input id="data-entrega" type="text">
+
+        <button id="btn-salvar">Salvar</button>
+      </div>
+    </div>
+  </body>
+  <script>function formatarData() {
+  let inputData = document.getElementById("data-entrega").value;
+
+  let dataFormatada = inputData.replace(/^(\d{2})(\d{2})(\d{2})$/, "$1/$2/$3");
+
+  document.getElementById("data-entrega").value = dataFormatada;
+}
+document
+      .getElementById("btn-salvar")
+      .addEventListener("click", function () {
+        gerarProximoId();
+        const nomeMotoca = document.getElementById("nome-motoca").value;
+        const enderecoEntrega = document.getElementById("endereco-entrega").value;
+        const descricaoProduto = document.getElementById("descricao-produto").value;
+        const formaPagamento = document.getElementById("forma-pagamento").value;
+        const dataEntrega = document.getElementById("data-entrega").value;
+        const valorAproximado = document.getElementById("valorAproximado").value;  // Adicionando o valor calculado
+
+
+        fetch("https://registrodeentregas.pythonanywhere.com/salvar-dados", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+          },
+        body: JSON.stringify({
+        nomeMotoca: nomeMotoca,
+        enderecoEntrega: enderecoEntrega,
+        descricaoProduto: descricaoProduto,
+        formaPagamento: formaPagamento,
+        dataEntrega: dataEntrega,
+        valorAproximado: valorAproximado
+  }),
+})
+          .then((response) => {
+            if (response.ok) {
+              // Abre o modal ao invés de exibir o alert
+              document.getElementById("myModal").style.display = "block";
+            } else {
+              throw new Error("Erro ao salvar os dados");
+            }
+          })
+          .catch((error) => {
+            console.error("Erro ao salvar os dados:", error);
+          });
+      });
+    let proximoId = 1;
+
+    function gerarProximoId() {
+      document.getElementById("id").value = proximoId;
+      proximoId++;
+    }
+    // Selecionando o botão de fechar e o modal
+    var closeButton = document.querySelector(".close");
+    var modal = document.getElementById("myModal");
+
+    // Adicionando um evento de clique no botão de fechar
+    closeButton.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+
+    // Função para multiplicar cada número inserido no input 'descricao-produto' por 30 e colocar o resultado em 'valorAproximado'
+function calcularValorAproximado() {
+  const descricaoProduto = document.getElementById('descricao-produto').value;
+  const numeros = descricaoProduto.match(/\d+/g); // Encontrar todos os números na string
+  let total = 0;
+
+  if (numeros) {
+    numeros.forEach(numero => {
+      total += parseInt(numero, 10) * 30;
+    });
+  }
+
+  document.getElementById('valorAproximado').value = total.toFixed(2); // Exibir o valor total formatado
+}
+
+// Adicionar um listener para chamar a função quando o input 'descricao-produto' mudar
+document.getElementById('descricao-produto').addEventListener('input', calcularValorAproximado);
+  </script>
+</script>
+	<script src="./script.js"></script>
+</html>

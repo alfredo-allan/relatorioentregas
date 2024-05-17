@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/mediaqueries.css" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <style>
+      @media screen and (min-width: 800px) and (max-width: 2050px) {
+        footer img {
+          width: 170px;
+          height: 60px;
+        }
+        /* Outros estilos específicos para resoluções entre 1900px e 3090px */
+      }
+      * {
+        padding: 0;
+      }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #00ff7f;
+        margin: 0;
+        padding: 0;
+        margin-left: -7px;
+      }
+      @media screen and (min-width: 300px) and (max-width: 600px) {
+        footer {
+          height: 6vh;
+        }
+      }
+
+      @media screen and (min-width: 800px) and (max-width: 2050px) {
+        #menu-options img {
+          width: 206px;
+          position: relative;
+          margin: 13px;
+          margin-top: -44px;
+          border-bottom: 1px solid black; /* Adiciona uma linha preta na parte inferior da imagem */
+        }
+        #menu-options {
+          width: 25%;
+          height: 54vh;
+        }
+        footer {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          background-color: #00ff7f;
+          margin: 0;
+          padding: 0;
+          margin-left: -7px;
+        }
+      }
+    </style>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    <title>ChatApp</title>
+  </head>
+  <body>
+    <header id="ChatApp">
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+      <div id="menu-options">
+        <ul>
+          <span
+            id="close-icon"
+            style="
+              color: black;
+              position: absolute;
+              line-height: 0;
+              font-size: 30px;
+              margin-top: -20px;
+              cursor: pointer;
+            "
+            >X</span
+          >
+          <img src="../img/4 cordassof.png" alt="" />
+          <br />
+          <a href="../index.html"><li>Home</li></a>
+          <a href="../cdsentregas.html"><li>Registrar Entrega</li></a>
+          <a href="../pages/apagar.html"><li>Apagar Entrega</li></a>
+          <a href="../pages/consultar.html"><li>Consultar Entregas</li></a>
+          <a href="../pages/registrar.html"><li>Registar-Se</li></a>
+          <a href="../pages/sobre.html"><li>Sobre a 4cordas</li></a>
+          <a href="../pages/instrucao.html"><li>Ajuda</li></a>
+        </ul>
+      </div>
+      <!-- <h1 id="textchat">Chat Entregas</h1> -->
+      <!-- <img id="imgchat" src="../img/bater-papo.png" alt="" /> -->
+    </header>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Mensagem Enviada Com Sucesso!</p>
+      </div>
+    </div>
+    <div id="form">
+      <div id="consulta" class="column">
+        <span>Nome</span>
+        <input id="nomeusuario" type="text" placeholder="Digite Seu Nome" />
+        <span>Escolher Usuário</span>
+        <input placeholder="Nome Do Destinátario" id="lstUsu" type="text" />
+        <div id="msgEnviar">
+      <span style="" >Enviar Mensagem</span> <br />
+      <textarea
+        placeholder="Escreva A Mensagem...."
+        id="enviarMsg"
+        type="text"
+      ></textarea>
+        <div id="btns">
+          <button id="enviarmsg">Enviar</button>
+          <button id="delMsg">Deletar Tudo</button>
+        </div>
+      </div>
+    </div>
+      <!-- <img id="imgEnviarmsg" src="../img/enviar-mensagem.png" alt="" /> -->
+    </div>
+    <footer>
+      <img src="../img/4 cordassof.png" alt="" />
+    </footer>
+    <script>
+      const inputNomeUsuario = document.getElementById("nomeusuario");
+
+      inputNomeUsuario.addEventListener("input", () => {
+        const nomeUsuario = inputNomeUsuario.value;
+
+        fetch(`http://192.168.10.20:8033/usuarios/${nomeUsuario}`)
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error("Usuário não encontrado");
+            }
+          })
+          .then((data) => {
+            console.log("Usuário encontrado:", data);
+          })
+          .catch((error) => {
+            console.error("Erro:", error);
+          });
+      });
+    </script>
+
+    // Adicione este script abaixo do botão 'Selecionar' no seu HTML
+
+    <script>
+      const buttonSelecionar = document.getElementById("ctsUsu");
+
+      buttonSelecionar.addEventListener("click", () => {
+        const nomeUsuario = document.getElementById("lstUsu").value;
+
+        fetch(`http://192.168.10.20:8033/usuarios/${nomeUsuario}`)
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error("Usuário não encontrado");
+            }
+          })
+          .then((data) => {
+            console.log("Destinatário encontrado:", data);
+          })
+          .catch((error) => {
+            console.error("Erro:", error);
+          });
+      });
+    </script>
+
+    // Adicione este script abaixo do botão 'Enviar' no seu HTML
+
+    <script>
+      const buttonEnviar = document.getElementById("enviarmsg");
+
+      buttonEnviar.addEventListener("click", () => {
+        const sender = document.getElementById("nomeusuario").value;
+        const recipient = document.getElementById("lstUsu").value;
+        const message = document.getElementById("enviarMsg").value;
+
+        fetch("http://192.168.10.20:8033/enviar-mensagem", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sender_username: sender,
+            recipient_username: recipient,
+            message: message,
+          }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log("Mensagem enviada com sucesso");
+            } else {
+              throw new Error("Erro ao enviar mensagem");
+            }
+          })
+          .catch((error) => {
+            console.error("Erro:", error);
+          });
+      });
+    </script>
+    <script>
+      let isTyping = false;
+
+      // Função para verificar se o usuário está digitando
+      function checkTyping() {
+        const inputField = document.getElementById("enviarMsg");
+        inputField.addEventListener("input", () => {
+          isTyping = inputField.value.length > 0;
+        });
+      }
+
+      function monitorNewMessages() {
+        const nomeUsuario = document.getElementById("nomeusuario").value;
+
+        // Lógica para buscar novas mensagens do servidor e inserir no campo msgEnviar
+        fetch(`http://192.168.10.20:8033/mensagens/${nomeUsuario}`)
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error("Erro ao buscar novas mensagens");
+            }
+          })
+          .then((data) => {
+            const messages = data; // Não precisamos acessar data.messages, pois a resposta do servidor já é uma lista de mensagens
+            const msgEnviar = document.getElementById("msgEnviar");
+            msgEnviar.innerHTML = ""; // Limpar mensagens antigas antes de adicionar as novas
+
+            messages.forEach((message) => {
+              const p = document.createElement("p");
+              p.textContent = message.message; // A mensagem está no campo "message" do objeto de mensagem
+              msgEnviar.appendChild(p);
+            });
+          })
+          .catch((error) => {
+            console.error("Erro ao buscar novas mensagens:", error);
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        monitorNewMessages();
+      });
+
+      // Adicionar esta função para limpar o campo de entrada após o envio de mensagem
+      function limparCampoDeMensagem() {
+        document.getElementById("enviarMsg").value = "";
+      }
+    </script>
+    <script src="../script.js"></script>
+  </body>
+</html>
