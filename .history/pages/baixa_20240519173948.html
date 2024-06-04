@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/mediaqueries.css" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <style>
+      .sobra {
+        img {
+          width: 60px;
+        }
+      }
+      @media screen and (min-width: 800px) and (max-width: 2050px) {
+        #menu-options img {
+          width: 206px;
+          position: relative;
+          margin: 13px;
+          margin-top: -44px;
+          border-bottom: 1px solid black; /* Adiciona uma linha preta na parte inferior da imagem */
+        }
+        #menu-options {
+          width: 25%;
+          height: 54vh;
+        }
+      }
+
+      @media screen and (min-width: 800px) and (max-width: 2050px) {
+        footer img {
+          width: 170px;
+          height: 60px;
+        }
+        .column-2 {
+          display: flex;
+          flex-direction: column;
+          padding: 100px 20px 15px 15px;
+          border-radius: 2%;
+          margin: 0px auto;
+          margin-top: -100px;
+          input {
+            width: 300px;
+          }
+          img {
+            width: 50px;
+            display: block;
+            margin-left: 215px;
+            margin-top: -50px;
+            padding: 5px 0px;
+          }
+          column-3 {
+
+          }
+        }
+      }
+
+      @media screen and (min-width: 300px) and (max-width: 600px) {
+        footer {
+          position: fixed;
+          margin: 0;
+        }
+      }
+      #form {
+        border-radius: 50%;
+      }
+    </style>
+    <title>Sobra De Materiais</title>
+  </head>
+  <body>
+    <div id="menu-options">
+      <ul>
+        <span id="close-icon">X</span>
+        <img src="../img/4 cordassof.png" alt="" />
+        <br />
+        <a href="../index.html"><li>Home</li></a>
+        <a href="../pages/consultar.html"><li>Consultar Entregas</li></a>
+        <a href="../pages/apagar.html"><li>Apagar Entrega</li></a>
+        <a href="../pages/registrar.html"><li>Registrar-Se No Chat</li></a>
+        <a href="../pages/chatapp.html"><li>Chat</li></a>
+        <a href="../pages/sobre.html"><li>Sobre a 4cordas</li></a>
+        <a href="../pages/instrucao.html"><li>Ajuda</li></a>
+      </ul>
+    </div>
+    <header>
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+
+      <!-- <img id="cha" src="./img/marijuana.png" alt="" />
+        <img id="po" src="./img/cocaina.png" alt="" />
+        <img id="bala" src="./img/mdma.png" alt="" />
+        <img id="lsd" src="./img/lsd.png" alt="" />
+        <img id="ghb" src="./img/ghb.png" alt="" /> -->
+    </header>
+    <h1 id="text-top">Sobra De Materiais</h1>
+    <div id="sobra">
+      <div class="column-2">
+        <!-- <span style="display: none">ID:</span> -->
+        <input
+          type="text"
+          id="id"
+          style="display: none"
+          placeholder="ID"
+          readonly
+        />
+        <span>Nome Do Motoca</span>
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+        <br />
+
+        <span
+          >99% 1G<img id="bvermelho" src="../img/circulo (1).png" alt=""
+        /></span>
+        <input type="text" id="vermelho" placeholder="Quantidade..." />
+
+        <span
+          >99% 3G<img id="bverde" src="../img/circulo (2).png" alt=""
+        /></span>
+        <input type="text" id="verde" placeholder="Quantidade..." />
+
+        <span
+          >Key<img id="bamarelo" src="../img/circulo (3).png" alt=""
+        /></span>
+        <input type="text" id="amarelo" placeholder="Quantidade..." />
+        <span>Md Rosa<img id="mdrosa" src="../img/gema.png" alt="" /></span>
+        <input type="text" id="mdrosa" placeholder="Quantidade..." />
+        <div class="column-3">
+          <span
+            >MD Preto<img id="mdpreto" src="../img/cristal.png" alt=""
+          /></span>
+          <input type="text" id="mdpreto" placeholder="Quantidade..." />
+
+          <span>Doce<img id="imdoce" src="../img/lsd.png" alt="" /></span>
+          <input type="text" id="doce" placeholder="Quantidade..." />
+
+          <span>Doce<img id="bala" src="../img/mdma (1).png" alt="" /></span>
+          <input type="text" id="bala" placeholder="Quantidade..." />
+
+          <span>GHB<img id="ghb" src="../img/ghb.png" alt="" /></span>
+          <input type="text" id="ghb" placeholder="Quantidade..." />
+
+          <span
+            >Cristal<img id="cristal" src="../img/ghb (1).png" alt=""
+          /></span>
+          <input type="text" id="ghb" placeholder="Quantidade..." />
+
+          <span
+            >Prensado<img id="prensado" src="../img/marijuana (3).png" alt=""
+          /></span>
+          <input type="text" id="prensado" placeholder="Quantidade..." />
+
+          <div class="column-3">
+            <span
+              >Ice<img id="ice" src="../img/marijuana (5).png" alt=""
+            /></span>
+            <input type="text" id="ice" placeholder="Quantidade..." />
+
+            <span>Skank<img id="skank" src="../img/maconha.png" alt="" /></span>
+            <input type="text" id="skank" placeholder="Quantidade..." />
+
+            <span
+              >Skank Pote Pequeno<img
+                id="skank"
+                src="../img/maconha.png"
+                alt=""
+            /></span>
+            <input type="text" id="skank" placeholder="Quantidade..." />
+
+            <span
+              >Flor Verde<img
+                id="florverde"
+                src="../img/marijuana (6).png"
+                alt=""
+            /></span>
+            <input type="text" id="florverde" placeholder="Quantidade..." />
+
+            <span
+              >Prensado Brind<img
+                id="prenbrind"
+                src="../img/marijuana.png"
+                alt=""
+            /></span>
+            <input type="text" id="florverde" placeholder="Quantidade..." />
+
+            <span>Meleca<img id="meleca" src="../img/slime.png" alt="" /></span>
+            <input type="text" id="meçeca" placeholder="Quantidade..." />
+
+            <span>Data</span>
+            <input id="data-entrega" type="text" />
+          </div>
+        </div>
+        <button id="btn-salvar">Salvar</button>
+      </div>
+    </div>
+    <script src="../script.js"></script>
+  </body>
+</html>

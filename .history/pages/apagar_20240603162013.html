@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/styles.css" />
+    <link rel="stylesheet" href="../style/mediaqueries.css" />
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    <style>
+      @media screen and (min-width: 800px) and (max-width: 2050px) {
+        footer img {
+          width: 170px;
+          height: 60px;
+          z-index: 999;
+        }
+        #form {
+          margin-left: -720px;
+        }
+        #text-top {
+          margin-left: -720px;
+        }
+        #data-list {
+          width: 48%;
+          margin-left: 160px;
+          height: 117%;
+          position: absolute;
+          z-index: 0;
+
+          .name {
+            font-size: 30px;
+          }
+          .item {
+            font-size: 30px;
+          }
+        }
+      }
+      @media screen and (min-width: 300px) and (max-width: 600px) {
+        footer {
+          margin: 0;
+          padding: 0;
+          margin-top: 180px;
+          position: absolute;
+          width: 100%;
+          margin-left: -7px;
+        }
+      }
+
+      @media screen and (min-width: 800px) and (max-width: 2500px) {
+        footer {
+          width: 102%;
+          padding: 0;
+          margin: 0px;
+          margin-left: -8px;
+          bottom: 0px;
+          position: fixed;
+        }
+      }
+
+      @media screen and (min-width: 800px) and (max-width: 2050px) {
+        #menu-options img {
+          width: 206px;
+          position: relative;
+          margin: 13px;
+          margin-top: -44px;
+          border-bottom: 1px solid black; /* Adiciona uma linha preta na parte inferior da imagem */
+        }
+        #menu-options {
+          width: 25%;
+          height: 54vh;
+        }
+      }
+    </style>
+    <title>Consultar Entregas</title>
+  </head>
+  <body>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Dados excluídos com sucesso!</p>
+      </div>
+    </div>
+    <div id="menu-options">
+      <ul>
+        <span
+          id="close-icon"
+          style="
+            color: black;
+            position: absolute;
+            line-height: 0;
+            font-size: 30px;
+            margin-top: -20px;
+            cursor: pointer;
+          "
+          >X</span
+        >
+        <img src="../img/4 cordassof.png" alt="" />
+        <br />
+        <a href="../index.html"><li>Home</li></a>
+        <a href="../cdsentregas.html"><li>Registrar Entrega</li></a>
+        <a href="../pages/consultar.html"><li>Consultar Entregas</li></a>
+        <a href="../pages/registrar.html"><li>Registra-Se No Chat</li></a>
+        <a href="../pages/chatapp.html"><li>Chat</li></a>
+        <a href="../pages/sobre.html"><li>Sobre a 4cordas</li></a>
+        <a href="../pages/instrucao.html"><li>Ajuda</li></a>
+      </ul>
+    </div>
+    <header>
+      <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
+    </header>
+    <h1 id="text-top">Registro De Entregas</h1>
+    <div id="form">
+      <div id="consulta" class="column">
+        <input
+          type="text"
+          id="id"
+          style="display: none"
+          placeholder="ID"
+          readonly
+        />
+        <span>Nome Do Motoca</span>
+        <input type="text" id="nome-motoca" placeholder="Digite Seu Nome" />
+        <span>Data Inicial</span>
+        <input
+          class="datainicial"
+          id="data-inicial"
+          type="date"
+          style="text-align: center"
+        />
+        <span>Data Final</span>
+        <input
+          class="datafinal"
+          id="data-final"
+          type="date"
+          style="text-align: center"
+        />
+        <div id="btns">
+          <button id="consulta-btn">Consultar</button>
+          <button id="delete" style="background-color: red">Deletar</button>
+        </div>
+      </div>
+    </div>
+    <div id="data-list"></div>
+
+    <div id="modal-confirm" class="modal">
+      <div class="modal-content">
+        <p id="confirm-text"></p>
+        <div id="modalbtn">
+          <button id="confirmButton">Sim</button>
+          <button id="cancelButton">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <img src="../img/4 cordassof.png" alt="" />
+    </footer>
+    <script>
+      function formatDate(date) {
+        const [year, month, day] = date.split("-");
+        return `${day}/${month}/${year}`;
+      }
+
+      document
+        .getElementById("consulta-btn")
+        .addEventListener("click", function () {
+          const nomeMotoca = document.getElementById("nome-motoca").value;
+          const dataInicio = document.getElementById("data-inicial").value;
+          const dataFim = document.getElementById("data-final").value;
+
+          if (!nomeMotoca) {
+            alert("Por favor, preencha o nome do motoca.");
+            return;
+          }
+
+          if (!dataInicio || !dataFim) {
+            alert("Por favor, preencha as datas inicial e final.");
+            return;
+          }
+
+          fetch("https://registrodeentregas.pythonanywhere.com/dados")
+            .then((response) => response.json())
+            .then((data) => {
+              const dataList = document.getElementById("data-list");
+              dataList.innerHTML = "";
+
+              const idsToDelete = [];
+
+              data.forEach((item) => {
+                if (
+                  item.nomeMotoca === nomeMotoca &&
+                  item.dataEntrega >= dataInicio &&
+                  item.dataEntrega <= dataFim
+                ) {
+                  idsToDelete.push(item.id);
+
+                  const listItem = document.createElement("li");
+                  listItem.innerHTML = `
+            <br/>
+            <span class="name">Número Do Registro: </span> <span class="item" id="id" style="color:rgb(165, 7, 7);">${item.id} <img style="margin: -5px; margin-left: 10px;" src="../img/bloquear.png" onclick="deleteData(${item.id})"></span><br>
+            <span class="name">Nome Do Motoca: </span> <span class="item" id="nome-motoca">${item.nomeMotoca}</span><br>
+            <span class="name">Endereço Da Entrega: </span><span class="item">${item.enderecoEntrega}</span><br>
+            <span class="name">Descrição do Produto: </span><span class="item">${item.descricaoProduto}</span><br>
+            <span class="name">Valor Aproximado Da Entrega: </span><span class="item">${item.valorAproximado}</span><br>
+            <span class="name">Forma De Pagamento: </span><span class="item">${item.formaPagamento}</span><br>
+            <span class="name">Data Da Entrega: </span><span class="item">${item.dataEntrega}</span><br>
+          `;
+                  dataList.appendChild(listItem);
+                }
+              });
+
+              if (idsToDelete.length === 0) {
+                alert("Nenhum dado encontrado para as datas fornecidas.");
+                return;
+              }
+
+              const confirmText = document.getElementById("confirm-text");
+              confirmText.textContent = `Deseja excluir os dados entre ${dataInicio} e ${dataFim}?`;
+              document.getElementById("modal-confirm").style.display = "block";
+
+              document.getElementById("confirmButton").onclick = function () {
+                fetch(
+                  `https://registrodeentregas.pythonanywhere.com/excluir-dados`,
+                  {
+                    method: "DELETE",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ ids: idsToDelete }),
+                  }
+                )
+                  .then((response) => {
+                    if (response.ok) {
+                      document.getElementById("myModal").style.display =
+                        "block";
+                      document.getElementById("data-list").innerHTML = ""; // Limpa a lista após a exclusão
+                    } else {
+                      alert("Erro ao apagar os dados.");
+                    }
+                  })
+                  .catch((error) => {
+                    console.error("Erro ao apagar dados:", error);
+                    alert("Erro ao apagar os dados.");
+                  });
+
+                document.getElementById("modal-confirm").style.display = "none";
+              };
+
+              document.getElementById("cancelButton").onclick = function () {
+                document.getElementById("modal-confirm").style.display = "none";
+              };
+            })
+            .catch((error) => console.error("Erro ao buscar dados:", error));
+        });
+
+      var closeButton = document.querySelector(".close");
+      var modal = document.getElementById("myModal");
+
+      closeButton.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+    </script>
+    <script>
+      function formatDateToDDMMYYYY(date) {
+        const [year, month, day] = date.split("-");
+        return `${day}/${month}/${year}`;
+      }
+
+      document.getElementById("delete").addEventListener("click", function () {
+        const dataInicio = document.getElementById("data-inicial").value;
+        const dataFim = document.getElementById("data-final").value;
+
+        if (dataInicio && dataFim) {
+          const formattedDataInicio = formatDateToDDMMYYYY(dataInicio);
+          const formattedDataFim = formatDateToDDMMYYYY(dataFim);
+
+          const confirmText = document.getElementById("confirm-text");
+          confirmText.textContent = `Deseja excluir os dados entre ${formattedDataInicio} e ${formattedDataFim}?`;
+          document.getElementById("modal-confirm").style.display = "block";
+
+          document.getElementById("confirmButton").onclick = function () {
+            fetch(
+              `https://registrodeentregas.pythonanywhere.com/excluir-dados`,
+              {
+                method: "DELETE",
+              }
+            )
+              .then((response) => {
+                if (response.ok) {
+                  document.getElementById("myModal").style.display = "block";
+                  document.getElementById("data-list").innerHTML = ""; // Limpa a lista após a exclusão
+                } else {
+                  alert("Erro ao apagar os dados.");
+                }
+              })
+              .catch((error) => {
+                console.error("Erro ao apagar dados:", error);
+                alert("Erro ao apagar os dados.");
+              });
+
+            document.getElementById("modal-confirm").style.display = "none";
+          };
+
+          document.getElementById("cancelButton").onclick = function () {
+            document.getElementById("modal-confirm").style.display = "none";
+          };
+        } else {
+          alert("Por favor, preencha as datas inicial e final.");
+        }
+      });
+    </script>
+    <script src="../script.js"></script>
+  </body>
+</html>
