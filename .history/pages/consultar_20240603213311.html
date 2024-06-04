@@ -81,60 +81,34 @@
       @media screen and (min-width: 300px) and (max-width: 600px) {
         #close-icon {
           margin-left: 224px;
+          margin-left: 190px;
         }
         #text-top {
-          margin-top: -20px;
-          font-size: 34px;
+          margin-top: -19px;
+        }
+
+        #menu-icon {
+          margin-left: 10px;
+          margin-top: 5px;
+        }
+
+        #listaCnst {
+          margin-top: -24px;
         }
         footer {
-          margin: 0px 0px -38px;
-        }
-        #data-list {
+          height: 6vh;
+          margin: 0;
+          padding: 0;
+          margin-top: 174px;
           position: absolute;
-          z-index: 999;
-          margin-top: 136px;
+          width: 100%;
+          margin-left: 0px;
         }
-      }
-
-      #menu-icon {
-        margin-left: 10px;
-        margin-top: 5px;
-      }
-
-      #listaCnst {
-        margin-top: -24px;
       }
     </style>
     <title>Consultar Entregas</title>
   </head>
   <body>
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <p>Dados excluídos com sucesso!</p>
-      </div>
-    </div>
-    <div id="modal-confirm" class="modal" style="z-index: 999">
-      <div class="modal-content">
-        <p id="confirm-text"></p>
-        <div id="modalbtn">
-          <button id="confirmButton">Sim</button>
-          <button id="cancelButton">Cancelar</button>
-        </div>
-      </div>
-    </div>
-    <div id="modal-error" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <p id="error-text"></p>
-      </div>
-    </div>
-    <div id="modal-no-data" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <p>Nenhum dado encontrado para as datas fornecidas.</p>
-      </div>
-    </div>
     <div id="menu-options">
       <ul>
         <span
@@ -152,7 +126,7 @@
         <img src="../img/4 cordassof.png" alt="" /><br />
         <a href="../index.html"><li>Home</li></a>
         <a href="../cdsentregas.html"><li>Registrar Entrega</li></a>
-        <a href="../pages/consultar.html"><li>Consultar Entregas</li></a>
+        <a href="../pages/apagar.html"><li>Apagar Entrega</li></a>
         <a href="../pages/registrar.html"><li>Registrar-Se No Chat</li></a>
         <a href="../pages/chatapp.html"><li>Chat</li></a>
         <a href="../pages/sobre.html"><li>Sobre a 4cordas</li></a>
@@ -162,7 +136,13 @@
     <header>
       <img id="menu-icon" src="../img/barra-de-menu.png" alt="" />
     </header>
-    <h1 id="text-top" style="color: black">Registro De Entregas</h1>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Dados Atualizados com sucesso!</p>
+      </div>
+    </div>
+    <h1 id="text-top">Registro De Entregas</h1>
     <div id="form">
       <div id="consulta" class="column">
         <input
@@ -190,9 +170,7 @@
         />
         <div id="btns">
           <button id="consulta-btn">Consultar</button>
-          <button id="deletar-btn" style="background-color: red">
-            Deletar
-          </button>
+          <button id="gerar-relatorio-btn">Relatório</button>
         </div>
       </div>
     </div>
@@ -201,19 +179,9 @@
       <img src="../img/4 cordassof.png" alt="" />
     </footer>
     <script>
-      let idsToDelete = [];
-
       function formatDate(date) {
         const [year, month, day] = date.split("-");
         return `${day}/${month}/${year}`;
-      }
-
-      function showModal(modalId) {
-        document.getElementById(modalId).style.display = "block";
-      }
-
-      function hideModal(modalId) {
-        document.getElementById(modalId).style.display = "none";
       }
 
       document
@@ -232,9 +200,6 @@
             .then((data) => {
               const dataList = document.getElementById("data-list");
               dataList.innerHTML = "";
-
-              idsToDelete = [];
-
               data.forEach((item) => {
                 const dataEntrega = new Date(
                   item.dataEntrega.split("/").reverse().join("-")
@@ -244,94 +209,77 @@
                   dataEntrega >= dataInicial &&
                   dataEntrega <= dataFinal
                 ) {
-                  idsToDelete.push(item.id);
-
                   const listItem = document.createElement("li");
                   listItem.id = "listaCnst";
                   listItem.innerHTML = `
-                <br/>
-                <span class="name">Número Do Registro: </span> <span class="item" id="id" style="color:rgb(165, 7, 7);">${item.id}<img style="margin: -5px; margin-left: 10px;" src="../img/atualizada.png"></span><br>
-                <span class="name">Nome Do Motoca: </span> <span class="item" id="nome-motoca">${item.nomeMotoca}</span><br>
-                <span class="name">Endereço Da Entrega: </span><span class="item">${item.enderecoEntrega}</span><br>
-                <span class="name">Descrição do Produto: </span><span class="item">${item.descricaoProduto}</span><br>
-                <span class="name">Valor Aproximado Da Entrega: </span><span class="item">${item.valorAproximado}</span><br>
-                <span class="name">Forma De Pagamento: </span><span class="item">${item.formaPagamento}</span><br>
-                <span class="name">Data Da Entrega: </span><span class="item">${item.dataEntrega}</span><br>
-              `;
+                    <br/>
+                    <span class="name">Número Do Registro: </span> <span class="item" id="id" style="color:rgb(165, 7, 7);">${item.id}<img style="margin: -5px; margin-left: 10px;" src="../img/atualizada.png"></span><br>
+                    <span class="name">Nome Do Motoca: </span> <span class="item" id="nome-motoca">${item.nomeMotoca}</span><br>
+                    <span class="name">Endereço Da Entrega: </span><span class="item">${item.enderecoEntrega}</span><br>
+                    <span class="name">Descrição do Produto: </span><span class="item">${item.descricaoProduto}</span><br>
+                    <span class="name">Valor Aproximado Da Entrega: </span><span class="item">${item.valorAproximado}</span><br>
+                    <span class="name">Forma De Pagamento: </span><span class="item">${item.formaPagamento}</span><br>
+                    <span class="name">Data Da Entrega: </span><span class="item">${item.dataEntrega}</span><br>
+                  `;
                   listItem.addEventListener("click", function () {
                     window.location.href = `editar.html?id=${item.id}`;
                   });
                   dataList.appendChild(listItem);
                 }
               });
-
-              if (idsToDelete.length === 0) {
-                showModal("modal-no-data");
-              }
             })
-            .catch((error) => {
-              console.error("Erro ao buscar dados:", error);
-              document.getElementById("error-text").innerText =
-                "Erro ao buscar dados.";
-              showModal("modal-error");
-            });
+            .catch((error) => console.error("Erro ao buscar dados:", error));
         });
 
       document
-        .getElementById("deletar-btn")
+        .getElementById("gerar-relatorio-btn")
         .addEventListener("click", function () {
-          const dataInicial = document.getElementById("data-inicial").value;
-          const dataFinal = document.getElementById("data-final").value;
-          document.getElementById(
-            "confirm-text"
-          ).innerText = `Tem certeza de que deseja excluir os dados de ${formatDate(
-            dataInicial
-          )} a ${formatDate(dataFinal)}?`;
-          showModal("modal-confirm");
-        });
+          const nomeMotoca = document.getElementById("nome-motoca").value;
+          const dataInicial = new Date(
+            document.getElementById("data-inicial").value
+          );
+          const dataFinal = new Date(
+            document.getElementById("data-final").value
+          );
 
-      document
-        .getElementById("cancelButton")
-        .addEventListener("click", function () {
-          hideModal("modal-confirm");
-        });
+          fetch(`https://registrodeentregas.pythonanywhere.com/dados`)
+            .then((response) => response.json())
+            .then((data) => {
+              const content = data
+                .map((item) => {
+                  const dataEntrega = new Date(
+                    item.dataEntrega.split("/").reverse().join("-")
+                  );
+                  if (
+                    item.nomeMotoca === nomeMotoca &&
+                    dataEntrega >= dataInicial &&
+                    dataEntrega <= dataFinal
+                  ) {
+                    return `
+                      Número Do Registro: ${item.id}
+                      Nome Do Motoca: ${item.nomeMotoca}
+                      Endereço Da Entrega: ${item.enderecoEntrega}
+                      Material E Quantidade: ${item.descricaoProduto}
+                      Valor Aproximado Da Entrega: ${item.valorAproximado}
+                      Forma De Pagamento: ${item.formaPagamento}
+                      Data Da Entrega: ${item.dataEntrega}
+                      -----------------------------
+                    `;
+                  }
+                })
+                .join("");
 
-      document
-        .getElementById("confirmButton")
-        .addEventListener("click", function () {
-          fetch(`https://registrodeentregas.pythonanywhere.com/excluir-dados`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ids: idsToDelete }),
-          })
-            .then((response) => {
-              if (response.ok) {
-                document.getElementById("data-list").innerHTML = "";
-                hideModal("modal-confirm");
-                showModal("myModal");
-              } else {
-                document.getElementById("error-text").innerText =
-                  "Erro ao excluir os dados.";
-                showModal("modal-error");
-              }
+              const blob = new Blob([content], { type: "text/plain" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "Relatorio_Entregas.txt";
+              a.click();
             })
-            .catch((error) => {
-              console.error("Erro ao excluir dados:", error);
-              document.getElementById("error-text").innerText =
-                "Erro ao excluir os dados.";
-              showModal("modal-error");
-            });
+            .catch((error) => console.error("Erro ao buscar dados:", error));
         });
-
-      document.querySelectorAll(".modal .close").forEach((closeBtn) => {
-        closeBtn.addEventListener("click", function () {
-          const modal = this.parentElement.parentElement;
-          hideModal(modal.id);
-        });
-      });
     </script>
     <script src="../script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.12.0/docxgen.js"></script>
   </body>
 </html>
